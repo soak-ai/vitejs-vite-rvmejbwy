@@ -109,15 +109,6 @@ const Styles = () => (
 @media (hover: none) {
   .cat-card:hover { transform: none; box-shadow: none; border-color: var(--sand-200) !important; }
 }
-```
-This disables hover effects on touch devices entirely.
-
----
-
-**3. Gratitude Wall "Send a card" button — make it secondary not primary**
-Search for:
-```
-onMouseOver={e=>{ e.currentTarget.style.background="var(--ink)"; e.currentTarget.style.color="#fff";
 
     /* ── PROMPT PILL ── */
     .prompt-pill {
