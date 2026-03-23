@@ -765,7 +765,7 @@ function GratitudeWall({ wallMessages, onHome }) {
           {/* CTA — secondary outlined (nav bar has the primary Send a Card) */}
           <button onClick={onHome}
             style={{ padding:"9px 22px", borderRadius:999, border:"1.5px solid var(--ink)", background:"transparent", color:"var(--ink)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7, transition:"background .18s, color .18s" }}
-            onMouseOver={e=>{ e.currentTarget.style.background="var(--ink)"; e.currentTarget.style.color="#fff"; }}
+            onMouseOver={e=>{ e.currentTarget.style.background="var(--sand-100)"; e.currentTarget.style.color="var(--ink)"; }}
             onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.color="var(--ink)"; }}>
             Send a card
             <span style={{ display:"inline-block", animation:"arrowPulse 1.4s ease-in-out infinite" }}>→</span>
@@ -1075,7 +1075,7 @@ export default function Heartfelt() {
     <div style={{ flex:1, display:"flex", justifyContent:"space-between", alignItems:"center", gap:12 }}>
       {/* Mobile-only Send a Card pill */}
       <button onClick={goHome} className="nav-item-press"
-        style={{ display:"flex", padding:"7px 16px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:500, cursor:"pointer" }}
+        style={{ display:"none", padding:"7px 16px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:500, cursor:"pointer" }}
         ref={el => { if(el) { const mq = window.matchMedia('(max-width:680px)'); const apply = e => el.style.display = e.matches ? 'flex' : 'none'; apply(mq); mq.addEventListener('change', apply); }}}>
         Send a Card
       </button>
