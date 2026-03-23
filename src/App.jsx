@@ -104,6 +104,20 @@ const Styles = () => (
     .cat-card:active { transform: scale(.97); }
     .cat-card:hover .cat-icon { transform: scale(1.14) rotate(-6deg); }
     .cat-icon { transition: transform .22s cubic-bezier(.34,1.56,.64,1); }
+    .cat-card:focus { outline: none; }
+.cat-card:focus-visible { outline: none; }
+@media (hover: none) {
+  .cat-card:hover { transform: none; box-shadow: none; border-color: var(--sand-200) !important; }
+}
+```
+This disables hover effects on touch devices entirely.
+
+---
+
+**3. Gratitude Wall "Send a card" button — make it secondary not primary**
+Search for:
+```
+onMouseOver={e=>{ e.currentTarget.style.background="var(--ink)"; e.currentTarget.style.color="#fff";
 
     /* ── PROMPT PILL ── */
     .prompt-pill {
@@ -469,7 +483,7 @@ function AISuggest({ catId, onUse }) {
             {[0,1,2].map(i => <div key={i} style={{ width:7, height:7, borderRadius:"50%", background:"var(--sand-200)", animation:`aiPulse 1.2s ease ${i*.2}s infinite` }}/>)}
           </div>
         : <>
-            <div style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:14, color:"var(--ink)", lineHeight:1.75, marginBottom:10 }}>{text}</div>
+            <div style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:14, color:"var(--ink)", lineHeight:1.75, textAlign:"center", marginBottom:10 }}>{text}</div>
             <div style={{ display:"flex", gap:8, justifyContent:"center" }}>
               <button onClick={() => onUse(text)}
                 style={{ padding:"7px 14px", borderRadius:999, border:`1.5px solid var(--ink)`, background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:13, cursor:"pointer", transition:"all .18s" }}
@@ -1067,10 +1081,10 @@ export default function Heartfelt() {
     </div>
 
     {/* RIGHT — Gratitude Wall + mobile Send a Card */}
-    <div style={{ flex:1, display:"flex", justifyContent:"flex-end", alignItems:"center", gap:12 }}>
+    <div style={{ flex:1, display:"flex", justifyContent:"space-between", alignItems:"center", gap:12 }}>
       {/* Mobile-only Send a Card pill */}
       <button onClick={goHome} className="nav-item-press"
-        style={{ display:"none", padding:"7px 16px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:500, cursor:"pointer" }}
+        style={{ display:"flex", padding:"7px 16px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:500, cursor:"pointer" }}
         ref={el => { if(el) { const mq = window.matchMedia('(max-width:680px)'); const apply = e => el.style.display = e.matches ? 'flex' : 'none'; apply(mq); mq.addEventListener('change', apply); }}}>
         Send a Card
       </button>
