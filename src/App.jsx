@@ -177,25 +177,29 @@ const Styles = () => (
       box-shadow: 0 12px 32px rgba(0,0,0,.12) !important;
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .compose-grid { grid-template-columns: 1fr !important; }
-      .compose-preview { position: static !important; }
-    }
-    @media (max-width: 680px) {
-      .cat-grid { grid-template-columns: repeat(2, 1fr) !important; }
-      .masonry-grid { grid-template-columns: repeat(2, 1fr) !important; }
-      .nav-wrap { padding: 0 16px !important; }
-      .page-wrap { padding: 0 16px !important; }
-    }
-    @media (max-width: 420px) {
-      .cat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-      .masonry-grid { grid-template-columns: 1fr !important; }
-      .sent-btns { flex-direction: column !important; align-items: stretch !important; }
-      .sent-btns button { justify-content: center; }
-      .share-row { flex-direction: column !important; }
-      .share-row button { width: 100%; justify-content: center; }
-    }
+   /* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .compose-grid { grid-template-columns: 1fr !important; }
+  .compose-preview { position: static !important; }
+}
+@media (max-width: 680px) {
+  .cat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .masonry-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .nav-wrap { padding: 0 16px !important; }
+  .page-wrap { padding: 0 16px !important; }
+  .nav-center-btn { display: none !important; }
+  .nav-logo-beta { display: none !important; }
+}
+@media (max-width: 480px) {
+  .cat-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .masonry-grid { grid-template-columns: 1fr !important; }
+  .sent-btns { flex-direction: column !important; align-items: stretch !important; }
+  .sent-btns button { justify-content: center; }
+  .share-row { flex-direction: column !important; }
+  .share-row button { width: 100%; justify-content: center; }
+  .nav-center-btn { display: none !important; }
+  .nav-logo-beta { display: none !important; }
+}
 
     /* ── STEP DOT ── */
     .step-dot {
@@ -1040,41 +1044,46 @@ export default function Heartfelt() {
       <FloatingBg/>
 
       {/* ── NAV ── */}
-      <nav style={{ position:"sticky", top:0, zIndex:20, background:"rgba(253,250,246,.94)", backdropFilter:"blur(18px)", borderBottom:"1px solid var(--sand-200)", height:58 }}>
-        <div className="nav-wrap" style={{ maxWidth:1152, margin:"0 auto", padding:"0 32px", height:"100%", display:"flex", alignItems:"center", position:"relative" }}>
+<nav style={{ position:"sticky", top:0, zIndex:20, background:"rgba(253,250,246,.94)", backdropFilter:"blur(18px)", borderBottom:"1px solid var(--sand-200)", height:58 }}>
+  <div className="nav-wrap" style={{ maxWidth:1152, margin:"0 auto", padding:"0 32px", height:"100%", display:"flex", alignItems:"center", position:"relative" }}>
 
-          {/* LEFT — logo */}
-          <div style={{ flex:1, display:"flex", alignItems:"center" }}>
-            <button onClick={goHome} className="nav-item-press" style={{ display:"flex", alignItems:"center", gap:9, background:"none", border:"none", cursor:"pointer", padding:0, transition:"opacity .15s" }} onMouseOver={e=>e.currentTarget.style.opacity=".8"} onMouseOut={e=>e.currentTarget.style.opacity="1"}>
-              <div style={{ width:40, height:40, borderRadius:11, background:"var(--ink)", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:20, fontWeight:700, lineHeight:1 }}>◇</div>
-              <span style={{ fontSize:17, fontFamily:"'Lora',serif", fontStyle:"italic", fontWeight:600, color:"var(--ink)" }}>heartfelt</span>
-              <span style={{ fontSize:10, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"2px 7px", letterSpacing:".06em", fontFamily:"'Lato', sans-serif" }}>BETA</span>
-            </button>
-          </div>
+    {/* LEFT — logo */}
+    <div style={{ flex:1, display:"flex", alignItems:"center" }}>
+      <button onClick={goHome} className="nav-item-press" style={{ display:"flex", alignItems:"center", gap:9, background:"none", border:"none", cursor:"pointer", padding:0, transition:"opacity .15s" }} onMouseOver={e=>e.currentTarget.style.opacity=".8"} onMouseOut={e=>e.currentTarget.style.opacity="1"}>
+        <div style={{ width:36, height:36, borderRadius:10, background:"var(--ink)", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:18, fontWeight:700, lineHeight:1 }}>◇</div>
+        <span style={{ fontSize:16, fontFamily:"'Lora',serif", fontStyle:"italic", fontWeight:600, color:"var(--ink)" }}>heartfelt</span>
+        <span className="nav-logo-beta" style={{ fontSize:10, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"2px 7px", letterSpacing:".06em", fontFamily:"'Lato', sans-serif" }}>BETA</span>
+      </button>
+    </div>
 
-          {/* CENTER — Send a Card — absolutely centred */}
-          <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)" }}>
-            <button onClick={goHome}
-              className="nav-item-press" style={{ padding:"9px 22px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", transition:"box-shadow .16s, transform .12s", boxShadow:"0 2px 10px rgba(24,18,14,.18)", whiteSpace:"nowrap" }}
-              onMouseOver={e => { e.currentTarget.style.boxShadow="0 4px 18px rgba(24,18,14,.28)"; e.currentTarget.style.transform="translateY(-1px)"; }}
-              onMouseOut={e  => { e.currentTarget.style.boxShadow="0 2px 10px rgba(24,18,14,.18)"; e.currentTarget.style.transform="translateY(0)"; }}>
-              Send a Card
-            </button>
-          </div>
+    {/* CENTER — Send a Card — hidden on mobile */}
+    <div className="nav-center-btn" style={{ position:"absolute", left:"50%", transform:"translateX(-50%)" }}>
+      <button onClick={goHome}
+        className="nav-item-press" style={{ padding:"9px 22px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", transition:"box-shadow .16s, transform .12s", boxShadow:"0 2px 10px rgba(24,18,14,.18)", whiteSpace:"nowrap" }}
+        onMouseOver={e => { e.currentTarget.style.boxShadow="0 4px 18px rgba(24,18,14,.28)"; e.currentTarget.style.transform="translateY(-1px)"; }}
+        onMouseOut={e  => { e.currentTarget.style.boxShadow="0 2px 10px rgba(24,18,14,.18)"; e.currentTarget.style.transform="translateY(0)"; }}>
+        Send a Card
+      </button>
+    </div>
 
-          {/* RIGHT — Gratitude Wall */}
-          <div style={{ flex:1, display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8 }}>
-
-            <button onClick={() => setPage("wall")} className="nav-item-press"
-              style={{ background:"none", border:"none", fontFamily:"'Lato', sans-serif", fontSize:14, fontWeight:page==="wall"?600:400, color:page==="wall"?"var(--ink-3)":"var(--ink-3)", cursor:"pointer", transition:"color .16s", position:"relative", paddingBottom:4 }} onMouseOver={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-2)"; }} onMouseOut={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-3)"; }}>
-              Gratitude Wall
-              {/* active underline */}
-              <span style={{ position:"absolute", bottom:0, left:0, right:0, height:1.5, background:"var(--ink-3)", borderRadius:2, transform:page==="wall"?"scaleX(1)":"scaleX(0)", transformOrigin:"left", transition:"transform .4s cubic-bezier(.25,.1,.25,1)" }}/>
-            </button>
-          </div>
-        </div>
-      </nav>
-
+    {/* RIGHT — Gratitude Wall + mobile Send a Card */}
+    <div style={{ flex:1, display:"flex", justifyContent:"flex-end", alignItems:"center", gap:12 }}>
+      {/* Mobile-only Send a Card pill */}
+      <button onClick={goHome} className="nav-item-press"
+        style={{ display:"none", padding:"7px 16px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:500, cursor:"pointer" }}
+        ref={el => { if(el) { const mq = window.matchMedia('(max-width:680px)'); const apply = e => el.style.display = e.matches ? 'flex' : 'none'; apply(mq); mq.addEventListener('change', apply); }}}>
+        Send a Card
+      </button>
+      <button onClick={() => setPage("wall")} className="nav-item-press"
+        style={{ background:"none", border:"none", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:page==="wall"?600:400, color:"var(--ink-3)", cursor:"pointer", transition:"color .16s", position:"relative", paddingBottom:4, whiteSpace:"nowrap" }}
+        onMouseOver={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-2)"; }}
+        onMouseOut={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-3)"; }}>
+        Gratitude Wall
+        <span style={{ position:"absolute", bottom:0, left:0, right:0, height:1.5, background:"var(--ink-3)", borderRadius:2, transform:page==="wall"?"scaleX(1)":"scaleX(0)", transformOrigin:"left", transition:"transform .4s cubic-bezier(.25,.1,.25,1)" }}/>
+      </button>
+    </div>
+  </div>
+</nav>
       <div style={{ position:"relative", zIndex:1 }}>
 
         {/* WALL */}
@@ -1096,7 +1105,7 @@ export default function Heartfelt() {
                 </p>
               </div>
 
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
+              <div className="cat-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
                 {CATS.map((c,i) => (
                   <div key={c.id} className="anim-fadeup" style={{ animationDelay:`${i*.06}s` }}>
                     <CatCard cat={c} onClick={() => { setSelCat(c.id); setPage("compose"); }}/>
@@ -1112,11 +1121,19 @@ export default function Heartfelt() {
           )}
 
           {/* COMPOSE */}
-          {page === "compose" && cat && (
-            <div style={{ paddingTop:44 }}>
-              <ComposeStep cat={cat} draft={formData} onBack={() => setPage("home")} onPreview={d => { setFormData(d); setPage("preview"); }}/>
-            </div>
-          )}
+{page === "compose" && cat && (
+  <div style={{ paddingTop:44 }}>
+    <div style={{ maxWidth:580, margin:"0 auto", padding:"0 24px 0" }}>
+      <button onClick={() => setPage("home")}
+        style={{ display:"inline-flex", alignItems:"center", gap:6, background:"none", border:"none", fontFamily:"'Lato', sans-serif", fontSize:13, color:"var(--ink-3)", cursor:"pointer", marginBottom:16, padding:"4px 0" }}
+        onMouseOver={e=>e.currentTarget.style.color="var(--ink)"}
+        onMouseOut={e=>e.currentTarget.style.color="var(--ink-3)"}>
+        ← Back to categories
+      </button>
+    </div>
+    <ComposeStep cat={cat} draft={formData} onBack={() => setPage("home")} onPreview={d => { setFormData(d); setPage("preview"); }}/>
+  </div>
+)}
 
           {/* PREVIEW */}
           {page === "preview" && cat && formData && (
