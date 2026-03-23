@@ -1,12 +1,11 @@
-// Heartfelt — Final Merged Version
-// • Card grid from App(5) — glassmorphism style, hover effects
-// • Gratitude Wall EXACT from App(3) — masonry, sticky-note tilt, no names required
-// • Sacramento script font at readable size
-// • No particles/shimmer in bg options
-// • Send animation replaced with clean paper-plane send
-// • heartfelt logo → home, Gratitude Wall → wall
-// • All labels in Inter (no monospace in dashboard UI)
-// Zero installs — paste into src/App.jsx
+// Heartfelt — Fixed Version
+// Fixes applied:
+// 1. wallMessages persisted in localStorage — cards survive refresh/tab sleep on mobile
+// 2. WALL_SEED used as default so wall is never empty on first load
+// 3. Gratitude Wall uses simple flat grid — no broken partial-row layout on mobile
+// 4. Category card borders visible on mobile (colored border, not transparent white)
+// 5. Confetti burst stays on screen on mobile (multiplier 3.5 → 2)
+// 6. All page transitions slowed to .52s for a calmer feel
 
 import { useState, useEffect, useCallback } from "react";
 
@@ -54,7 +53,7 @@ const Styles = () => (
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: 'Lato', sans-serif; font-weight: 500;
-      cursor: pointer; border: none; transition: all .2s ease;
+      cursor: pointer; border: none; transition: all .25s ease;
       border-radius: 999px; white-space: nowrap;
     }
     .btn:active:not(:disabled) { transform: scale(.97); }
@@ -92,7 +91,7 @@ const Styles = () => (
       border: 1.5px solid var(--sand-200);
       border-radius: 20px; padding: 22px;
       cursor: pointer;
-      transition: transform .22s, box-shadow .22s, border-color .22s;
+      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
       position: relative; overflow: hidden;
     }
     .cat-card::before {
@@ -110,7 +109,7 @@ const Styles = () => (
       .cat-card:hover .cat-icon { transform: scale(1.14) rotate(-6deg); }
     }
     .cat-card:active { transform: scale(.97); }
-    .cat-icon { transition: transform .22s cubic-bezier(.34,1.56,.64,1); }
+    .cat-icon { transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
     .cat-card:focus { outline: none; }
     .cat-card:focus-visible { outline: none; }
 
@@ -121,7 +120,7 @@ const Styles = () => (
       border: 1.5px solid var(--sand-200);
       background: rgba(255,255,255,.65);
       font-family: 'Lato', sans-serif; font-size: 13px; color: var(--ink-2);
-      cursor: pointer; line-height: 1.5; transition: all .18s;
+      cursor: pointer; line-height: 1.5; transition: all .22s;
     }
     .prompt-pill:hover { background: rgba(255,255,255,.95); border-color: var(--sand-300); }
 
@@ -178,7 +177,7 @@ const Styles = () => (
     .sticky-2 { --r: -1deg; }   .sticky-3 { --r: 2.5deg; }
     .sticky-4 { --r: -1.5deg; } .sticky-5 { --r: 1deg; }
     .sticky-note {
-      transition: transform .2s ease, box-shadow .2s ease;
+      transition: transform .25s ease, box-shadow .25s ease;
       transform: rotate(var(--r, 0deg));
     }
     .sticky-note-hover:hover {
@@ -187,8 +186,6 @@ const Styles = () => (
     }
 
     /* ── NAV ── */
-    /* Desktop: logo left | Send a Card center | Gratitude Wall right */
-    /* Mobile:  logo left | Send a Card center | Gratitude Wall right (no BETA tag) */
     .nav-mobile-send { display: none; }
     .nav-desktop-send { display: block; }
 
@@ -232,7 +229,7 @@ const Styles = () => (
       padding: 9px 14px; border-radius: 10px;
       font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 500;
       cursor: pointer; border: 1.5px solid transparent;
-      transition: transform .16s, box-shadow .16s;
+      transition: transform .2s, box-shadow .2s;
     }
     .sh-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.1); }
 
@@ -258,14 +255,16 @@ const Styles = () => (
     @keyframes spin        { to{transform:rotate(360deg)} }
     @keyframes fadeInUp   { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     @keyframes cardFadeOut { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(.88)} }
-    @keyframes burstPop    { 0%{transform:translate(var(--bx),var(--by)) scale(0);opacity:1} 60%{opacity:1} 100%{transform:translate(calc(var(--bx)*3.5),calc(var(--by)*3.5)) scale(1);opacity:0} }
+    /* FIX 5: multiplier reduced from 3.5 to 2 so confetti stays on screen on mobile */
+    @keyframes burstPop    { 0%{transform:translate(var(--bx),var(--by)) scale(0);opacity:1} 60%{opacity:1} 100%{transform:translate(calc(var(--bx)*2),calc(var(--by)*2)) scale(1);opacity:0} }
     @keyframes floatUp     { 0%{transform:translateY(0) scale(1) rotate(0deg);opacity:1} 100%{transform:translateY(-160px) scale(.4) rotate(var(--spin,180deg));opacity:0} }
     @keyframes sentBounce  { 0%{transform:scale(0) rotate(-12deg);opacity:0} 60%{transform:scale(1.18) rotate(4deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
     @keyframes confDrop { 0%{transform:translateY(-8px) rotate(0);opacity:1} 100%{transform:translateY(90px) rotate(540deg);opacity:0} }
 
-    .anim-fadeup  { animation: fadeUp  .42s ease both; }
-    .anim-slidein { animation: slideIn .36s ease both; }
-    .anim-popin   { animation: popIn   .42s cubic-bezier(.34,1.56,.64,1) both; }
+    /* Calmer page transitions */
+    .anim-fadeup  { animation: fadeUp  .52s ease both; }
+    .anim-slidein { animation: slideIn .46s ease both; }
+    .anim-popin   { animation: popIn   .52s cubic-bezier(.34,1.56,.64,1) both; }
   `}</style>
 );
 
@@ -470,7 +469,7 @@ function AISuggest({ catId, onUse }) {
 
   if (!shown) return (
     <button onClick={suggest}
-      style={{ display:"inline-flex", alignItems:"center", gap:7, padding:"9px 16px", borderRadius:999, border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.75)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, color:"var(--ink-3)", cursor:"pointer", transition:"all .18s" }}
+      style={{ display:"inline-flex", alignItems:"center", gap:7, padding:"9px 16px", borderRadius:999, border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.75)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, color:"var(--ink-3)", cursor:"pointer", transition:"all .22s" }}
       onMouseOver={e => { e.currentTarget.style.borderColor="var(--sand-300)"; e.currentTarget.style.color="var(--ink-2)"; }}
       onMouseOut={e  => { e.currentTarget.style.borderColor="var(--sand-200)"; e.currentTarget.style.color="var(--ink-3)"; }}>
       ✦ Suggest something heartfelt
@@ -605,12 +604,10 @@ function SentPage({ cat, formData, onHome, onViewWall }) {
 }
 
 // ── GRATITUDE WALL ────────────────────────────────────────────────────────────
+// FIX 3: Simple flat masonry-grid — no partial-row logic that breaks on mobile
 function GratitudeWall({ wallMessages, onHome }) {
   const getCat = id => CATS.find(c => c.id === id);
-  const recentCards = wallMessages.filter(m => (Date.now() - m.id) < 10*60*1000);
-  const olderCards  = wallMessages.filter(m => (Date.now() - m.id) >= 10*60*1000);
-  const allReal     = [...recentCards, ...olderCards];
-  const isEmpty     = allReal.length === 0;
+  const isEmpty = wallMessages.length === 0;
 
   return (
     <div className="anim-fadeup" style={{ maxWidth:1080, margin:"0 auto", padding:"56px 24px 80px" }}>
@@ -644,9 +641,8 @@ function GratitudeWall({ wallMessages, onHome }) {
               </div>
             ))}
           </div>
-          {/* Secondary outlined button — hover stays light, never fills black */}
           <button onClick={onHome}
-            style={{ padding:"9px 22px", borderRadius:999, border:"1.5px solid var(--ink)", background:"transparent", color:"var(--ink)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7, transition:"background .18s, color .18s" }}
+            style={{ padding:"9px 22px", borderRadius:999, border:"1.5px solid var(--ink)", background:"transparent", color:"var(--ink)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7, transition:"background .22s, color .22s" }}
             onMouseOver={e=>{ e.currentTarget.style.background="var(--sand-100)"; e.currentTarget.style.color="var(--ink)"; }}
             onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.color="var(--ink)"; }}>
             Send a card
@@ -658,50 +654,31 @@ function GratitudeWall({ wallMessages, onHome }) {
         </div>
       )}
 
-      {!isEmpty && (() => {
-        const fullRows   = Math.floor(allReal.length / 3);
-        const fullCards  = allReal.slice(0, fullRows * 3);
-        const lastCards  = allReal.slice(fullRows * 3);
-
-        const Card = ({ item, globalIdx }) => {
-          const cat   = getCat(item.cat);
-          const mod   = globalIdx % 6;
-          const isNew = !!item.isNew && (Date.now() - item.id) < 10*60*1000;
-          return (
-            <div className={`masonry-item sticky-${mod} sticky-note`}
-              style={{ background:item.color, borderRadius:16, padding:24, border:`1px solid ${cat?.accent||"#eee"}33`, boxShadow:"0 4px 16px rgba(0,0,0,.07)", animation:`stickyPop .4s ease both`, animationDelay:`${globalIdx*.06}s`, position:"relative", cursor:"default", userSelect:"none" }}>
-              {isNew && (
-                <div style={{ marginBottom:8 }}>
-                  <span style={{ fontSize:10, background:cat?.accent||"#888", color:"#fff", borderRadius:999, padding:"2px 10px", fontFamily:"'Lato', sans-serif", fontWeight:500, letterSpacing:".04em", display:"inline-block" }}>just now</span>
+      {!isEmpty && (
+        <div className="masonry-grid">
+          {wallMessages.map((item, i) => {
+            const cat = getCat(item.cat);
+            const mod = i % 6;
+            const isNew = !!item.isNew && (Date.now() - item.id) < 10*60*1000;
+            return (
+              <div key={item.id} className={`masonry-item sticky-${mod} sticky-note`}
+                style={{ background:item.color, borderRadius:16, padding:24, border:`1px solid ${cat?.accent||"#eee"}33`, boxShadow:"0 4px 16px rgba(0,0,0,.07)", animation:`stickyPop .5s ease both`, animationDelay:`${i*.06}s`, position:"relative", cursor:"default", userSelect:"none" }}>
+                {isNew && (
+                  <div style={{ marginBottom:8 }}>
+                    <span style={{ fontSize:10, background:cat?.accent||"#888", color:"#fff", borderRadius:999, padding:"2px 10px", fontFamily:"'Lato', sans-serif", fontWeight:500, letterSpacing:".04em", display:"inline-block" }}>just now</span>
+                  </div>
+                )}
+                <div style={{ fontSize:11, letterSpacing:".12em", textTransform:"uppercase", color:cat?.accent, marginBottom:12, fontFamily:"'Lato', sans-serif" }}>
+                  {cat?.glyph} {cat?.label}
                 </div>
-              )}
-              <div style={{ fontSize:11, letterSpacing:".12em", textTransform:"uppercase", color:cat?.accent, marginBottom:12, fontFamily:"'Lato', sans-serif" }}>
-                {cat?.glyph} {cat?.label}
+                <p style={{ fontSize:14, color:"var(--ink)", lineHeight:1.75, fontStyle:"italic", fontFamily:"'Lora',serif", marginBottom:12 }}>
+                  "{item.message}"
+                </p>
               </div>
-              <p style={{ fontSize:14, color:"var(--ink)", lineHeight:1.75, fontStyle:"italic", fontFamily:"'Lora',serif", marginBottom:12 }}>
-                "{item.message}"
-              </p>
-            </div>
-          );
-        };
-
-        const partialWidth = lastCards.length === 1 ? "calc(33.33% - 11px)" : "calc(66.67% - 6px)";
-
-        return (
-          <>
-            {fullCards.length > 0 && (
-              <div className="masonry-grid">
-                {fullCards.map((item, i) => <Card key={item.id} item={item} globalIdx={i}/>)}
-              </div>
-            )}
-            {lastCards.length > 0 && (
-              <div style={{ display:"grid", gridTemplateColumns:`repeat(${lastCards.length}, 1fr)`, gap:16, width: partialWidth, margin: fullCards.length > 0 ? "16px auto 0" : "0 auto", alignItems:"start" }}>
-                {lastCards.map((item, i) => <Card key={item.id} item={item} globalIdx={fullCards.length + i}/>)}
-              </div>
-            )}
-          </>
-        );
-      })()}
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -710,10 +687,11 @@ function GratitudeWall({ wallMessages, onHome }) {
 function CatCard({ cat, onClick }) {
   const [hov, setHov] = useState(false);
   return (
+    // FIX 4: Default border uses cat.accent+"38" so color is visible on mobile (no hover needed)
     <div className="cat-card" onClick={onClick}
       onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
-      style={{ "--accent-color":cat.accent, borderColor:hov?cat.accent+"88":"rgba(255,255,255,.9)", boxShadow:hov?`0 16px 40px ${cat.accent}22`:"0 2px 8px rgba(0,0,0,.04)", display:"flex", flexDirection:"column", alignItems:"flex-start" }}>
-      <div className="cat-icon" style={{ width:48, height:48, borderRadius:14, background:`linear-gradient(135deg,${cat.light},${cat.accent}28)`, border:`1px solid ${cat.accent}40`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, color:cat.accent, fontWeight:700, marginBottom:14, transition:"all .22s cubic-bezier(.34,1.56,.64,1)", flexShrink:0 }}>
+      style={{ "--accent-color":cat.accent, borderColor:hov?cat.accent+"88":cat.accent+"38", boxShadow:hov?`0 16px 40px ${cat.accent}22`:"0 2px 8px rgba(0,0,0,.04)", display:"flex", flexDirection:"column", alignItems:"flex-start" }}>
+      <div className="cat-icon" style={{ width:48, height:48, borderRadius:14, background:`linear-gradient(135deg,${cat.light},${cat.accent}28)`, border:`1px solid ${cat.accent}40`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, color:cat.accent, fontWeight:700, marginBottom:14, transition:"all .3s cubic-bezier(.34,1.56,.64,1)", flexShrink:0 }}>
         {cat.glyph}
       </div>
       <div style={{ width:"100%", textAlign:"center", marginBottom:16, flex:1 }}>
@@ -763,7 +741,7 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
             <div style={{ fontSize:12, letterSpacing:".08em", textTransform:"uppercase", color:"var(--ink-3)" }}>From &amp; To</div>
             <button onClick={swapNames} title="Swap sender & recipient"
-              style={{ width:32, height:32, borderRadius:"50%", border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.85)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:16, lineHeight:1, transition:"all .18s", transform: swapAnim ? "rotate(180deg) scale(1.15)" : "rotate(0deg) scale(1)", color:"var(--ink-3)" }}
+              style={{ width:32, height:32, borderRadius:"50%", border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.85)", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:16, lineHeight:1, transition:"all .22s", transform: swapAnim ? "rotate(180deg) scale(1.15)" : "rotate(0deg) scale(1)", color:"var(--ink-3)" }}
               onMouseOver={e => { e.currentTarget.style.borderColor="var(--ink)"; e.currentTarget.style.color="var(--ink)"; e.currentTarget.style.background="#fff"; }}
               onMouseOut={e  => { e.currentTarget.style.borderColor="var(--sand-200)"; e.currentTarget.style.color="var(--ink-3)"; e.currentTarget.style.background="rgba(255,255,255,.85)"; }}>
               ⇅
@@ -816,12 +794,12 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
             <div style={{ display:"flex", gap:6, flexWrap:"wrap", alignItems:"center" }}>
               {BG_OPTIONS.map(o => (
                 <button key={o.id} onClick={() => setBgMode(o.id)}
-                  style={{ padding:"7px 14px", borderRadius:999, border:`1.5px solid ${bgMode===o.id?cat.accent:"var(--sand-200)"}`, background:bgMode===o.id?cat.accent+"18":"rgba(255,255,255,.75)", fontFamily:"'Lato', sans-serif", fontSize:13, color:bgMode===o.id?cat.accent:"var(--ink-3)", cursor:"pointer", transition:"all .18s" }}>
+                  style={{ padding:"7px 14px", borderRadius:999, border:`1.5px solid ${bgMode===o.id?cat.accent:"var(--sand-200)"}`, background:bgMode===o.id?cat.accent+"18":"rgba(255,255,255,.75)", fontFamily:"'Lato', sans-serif", fontSize:13, color:bgMode===o.id?cat.accent:"var(--ink-3)", cursor:"pointer", transition:"all .22s" }}>
                   {o.label}
                 </button>
               ))}
               <button onClick={() => setShimmerOn(s => !s)}
-                style={{ padding:"7px 14px", borderRadius:999, border:`1.5px solid ${shimmerOn?cat.accent:"var(--sand-200)"}`, background:shimmerOn?cat.accent+"18":"rgba(255,255,255,.75)", fontFamily:"'Lato', sans-serif", fontSize:13, color:shimmerOn?cat.accent:"var(--ink-3)", cursor:"pointer", transition:"all .18s", display:"flex", alignItems:"center", gap:4 }}>
+                style={{ padding:"7px 14px", borderRadius:999, border:`1.5px solid ${shimmerOn?cat.accent:"var(--sand-200)"}`, background:shimmerOn?cat.accent+"18":"rgba(255,255,255,.75)", fontFamily:"'Lato', sans-serif", fontSize:13, color:shimmerOn?cat.accent:"var(--ink-3)", cursor:"pointer", transition:"all .22s", display:"flex", alignItems:"center", gap:4 }}>
                 ✨ Shimmer
               </button>
             </div>
@@ -832,7 +810,7 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
             <div style={{ display:"flex", gap:6 }}>
               {FONT_OPTIONS.map(f => (
                 <button key={f.id} onClick={() => setFontId(f.id)}
-                  style={{ flex:1, padding:"9px 10px", borderRadius:10, border:`1.5px solid ${fontId===f.id?cat.accent:"var(--sand-200)"}`, background:fontId===f.id?cat.accent+"18":"rgba(255,255,255,.75)", cursor:"pointer", transition:"all .16s", textAlign:"left" }}>
+                  style={{ flex:1, padding:"9px 10px", borderRadius:10, border:`1.5px solid ${fontId===f.id?cat.accent:"var(--sand-200)"}`, background:fontId===f.id?cat.accent+"18":"rgba(255,255,255,.75)", cursor:"pointer", transition:"all .2s", textAlign:"left" }}>
                   <div style={{ ...f.style, fontSize:f.id==="sacramento"?24:14, color:fontId===f.id?cat.accent:"var(--ink)", marginBottom:3 }}>Aa</div>
                   <div style={{ fontSize:11, color:fontId===f.id?cat.accent:"var(--ink-3)" }}>{f.label}</div>
                 </button>
@@ -859,11 +837,29 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
 
 // ── MAIN APP ──────────────────────────────────────────────────────────────────
 export default function Heartfelt() {
-  const [page,         setPage]         = useState("home");
-  const [selCat,       setSelCat]       = useState(null);
-  const [formData,     setFormData]     = useState(null);
-  const [wallMessages, setWallMessages] = useState([]);
-  const [celebrating,  setCelebrating]  = useState(false);
+  const [page,        setPage]        = useState("home");
+  const [selCat,      setSelCat]      = useState(null);
+  const [formData,    setFormData]    = useState(null);
+  const [celebrating, setCelebrating] = useState(false);
+
+  // FIX 1 + 2: Load from localStorage on first render, fall back to WALL_SEED
+  const [wallMessages, setWallMessages] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hf_wall_messages');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return WALL_SEED;
+  });
+
+  // FIX 1: Persist to localStorage whenever wallMessages changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('hf_wall_messages', JSON.stringify(wallMessages));
+    } catch {}
+  }, [wallMessages]);
 
   const cat = CATS.find(c => c.id === selCat);
 
@@ -887,20 +883,13 @@ export default function Heartfelt() {
       <Styles/>
       <FloatingBg/>
 
-      {/* ── NAV ──
-          Layout: [logo+BETA]  [Send a Card — absolute center]  [Gratitude Wall — right]
-          Mobile: [logo]  [Send a Card — absolute center]  [Gratitude Wall — right]
-          The trick: left div and right div both have flex:1 so the absolute-center
-          button stays truly centered regardless of content width on either side.
-      ── */}
       <nav style={{ position:"sticky", top:0, zIndex:20, background:"rgba(253,250,246,.94)", backdropFilter:"blur(18px)", borderBottom:"1px solid var(--sand-200)", height:58 }}>
         <div className="nav-wrap" style={{ maxWidth:1152, margin:"0 auto", padding:"0 32px", height:"100%", display:"flex", alignItems:"center", position:"relative" }}>
 
-          {/* LEFT — logo (flex:1 so it pushes to left and balances right side) */}
           <div style={{ flex:1, display:"flex", alignItems:"center" }}>
             <button onClick={goHome} className="nav-item-press"
-              style={{ display:"flex", alignItems:"center", gap:9, background:"none", border:"none", cursor:"pointer", padding:0, transition:"opacity .15s" }}
-              onMouseOver={e=>e.currentTarget.style.opacity=".8"}
+              style={{ display:"flex", alignItems:"center", gap:10, background:"none", border:"none", cursor:"pointer", padding:"6px 8px", borderRadius:10, transition:"opacity .2s" }}
+              onMouseOver={e=>e.currentTarget.style.opacity=".75"}
               onMouseOut={e=>e.currentTarget.style.opacity="1"}>
               <div style={{ width:36, height:36, borderRadius:10, background:"var(--ink)", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:18, fontWeight:700, lineHeight:1 }}>◇</div>
               <span style={{ fontSize:16, fontFamily:"'Lora',serif", fontStyle:"italic", fontWeight:600, color:"var(--ink)" }}>heartfelt</span>
@@ -908,29 +897,26 @@ export default function Heartfelt() {
             </button>
           </div>
 
-          {/* CENTER — absolutely positioned so it's always perfectly centered */}
           <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)" }}>
             <button onClick={goHome} className="nav-item-press nav-desktop-send"
-              style={{ padding:"9px 22px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", transition:"box-shadow .16s, transform .12s", boxShadow:"0 2px 10px rgba(24,18,14,.18)", whiteSpace:"nowrap" }}
+              style={{ padding:"9px 22px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", transition:"box-shadow .2s, transform .2s", boxShadow:"0 2px 10px rgba(24,18,14,.18)", whiteSpace:"nowrap" }}
               onMouseOver={e => { e.currentTarget.style.boxShadow="0 4px 18px rgba(24,18,14,.28)"; e.currentTarget.style.transform="translateY(-1px)"; }}
               onMouseOut={e  => { e.currentTarget.style.boxShadow="0 2px 10px rgba(24,18,14,.18)"; e.currentTarget.style.transform="translateY(0)"; }}>
               Send a Card
             </button>
-            {/* Mobile version — same position, different size */}
             <button onClick={goHome} className="nav-item-press nav-mobile-send"
               style={{ padding:"7px 16px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:500, cursor:"pointer", whiteSpace:"nowrap" }}>
               Send a Card
             </button>
           </div>
 
-          {/* RIGHT — Gratitude Wall (flex:1 + justify flex-end keeps it right-aligned) */}
           <div style={{ flex:1, display:"flex", justifyContent:"flex-end", alignItems:"center" }}>
             <button onClick={() => setPage("wall")} className="nav-item-press"
-              style={{ background:"none", border:"none", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:page==="wall"?600:400, color:"var(--ink-3)", cursor:"pointer", transition:"color .16s", position:"relative", paddingBottom:4, whiteSpace:"nowrap" }}
+              style={{ background:"none", border:"none", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:page==="wall"?600:400, color:"var(--ink-3)", cursor:"pointer", transition:"color .2s", position:"relative", paddingBottom:4, whiteSpace:"nowrap" }}
               onMouseOver={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-2)"; }}
               onMouseOut={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-3)"; }}>
               Gratitude Wall
-              <span style={{ position:"absolute", bottom:0, left:0, right:0, height:1.5, background:"var(--ink-3)", borderRadius:2, transform:page==="wall"?"scaleX(1)":"scaleX(0)", transformOrigin:"left", transition:"transform .4s cubic-bezier(.25,.1,.25,1)" }}/>
+              <span style={{ position:"absolute", bottom:0, left:0, right:0, height:1.5, background:"var(--ink-3)", borderRadius:2, transform:page==="wall"?"scaleX(1)":"scaleX(0)", transformOrigin:"left", transition:"transform .45s cubic-bezier(.25,.1,.25,1)" }}/>
             </button>
           </div>
 
@@ -957,7 +943,7 @@ export default function Heartfelt() {
 
               <div className="cat-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
                 {CATS.map((c,i) => (
-                  <div key={c.id} className="anim-fadeup" style={{ animationDelay:`${i*.06}s` }}>
+                  <div key={c.id} className="anim-fadeup" style={{ animationDelay:`${i*.07}s` }}>
                     <CatCard cat={c} onClick={() => { setSelCat(c.id); setPage("compose"); }}/>
                   </div>
                 ))}
