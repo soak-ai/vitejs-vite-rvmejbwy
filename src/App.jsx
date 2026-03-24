@@ -186,10 +186,11 @@ const Styles = () => (
       .compose-grid { grid-template-columns: 1fr !important; }
       .compose-preview { position: static !important; }
     }
-    @media (max-width: 680px) {
-      .nav-wrap { padding: 0 12px !important; }
-      .page-wrap { padding: 0 16px !important; }
-    }
+   @media (max-width: 680px) {
+  .nav-logo-beta { display: none !important; }
+  .nav-wrap { padding: 0 12px !important; }
+  .page-wrap { padding: 0 16px !important; }
+}
     /* Mobile: single column for cat cards and wall — one card at a time, calm feel */
     @media (max-width: 700px) {
       .cat-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
@@ -200,7 +201,10 @@ const Styles = () => (
       .share-row { flex-direction: column !important; }
       .share-row button { width: 100%; justify-content: center; }
     }
-
+.footer-beta { display: inline; }
+@media (min-width: 681px) {
+  .footer-beta { display: none; }
+}
     /* ── STEP DOT ── */
     .step-dot {
       width: 28px; height: 28px; border-radius: 50%;
@@ -965,7 +969,7 @@ export default function Heartfelt() {
               <div style={{ marginTop:48, paddingTop:20, borderTop:"1px solid var(--sand-200)", display:"flex", alignItems:"center", justifyContent:"center", gap:9 }}>
                 <span style={{ width:6, height:6, borderRadius:"50%", background:"#2e7d32", display:"inline-block", animation:"blinkDot 2.4s ease-in-out infinite" }}/>
                 <span style={{ fontSize:13, color:"var(--ink-3)" }}>
-{totalMessages} messages shared · free · no account needed · <span style={{ fontSize:11, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"1px 6px", letterSpacing:".06em" }}>BETA</span>
+{totalMessages} messages shared · free · no account needed · <span className="footer-beta" style={{ fontSize:11, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"1px 6px", letterSpacing:".06em" }}>BETA</span>
                 </span>
               </div>
             </div>
