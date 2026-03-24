@@ -786,8 +786,8 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
             )}
           </div>
 
-          <div style={{ marginTop:4, display:"flex", justifyContent:"center" }}>
-            <AISuggest catId={cat.id} onUse={t => setMessage(t)}/>
+<div style={{ marginTop:4 }}>
+          <AISuggest catId={cat.id} onUse={t => setMessage(t)}/>
           </div>
 
           <div>
