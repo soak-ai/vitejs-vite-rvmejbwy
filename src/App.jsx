@@ -10,6 +10,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 
+const SUPA_URL = "https://kazfdohlmupbkfyliovs.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthemZkb2hsbXVwYmtmeWxpb3ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNTY5MjAsImV4cCI6MjA4OTkzMjkyMH0.flbkl6d8GGfSmoIfvmxZPPQsusXrJ_D9uxD3Wsqj-XA";
+const supa = { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, "Content-Type": "application/json" } };
+
 const Styles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Sacramento&display=swap');
@@ -866,8 +870,8 @@ export default function Heartfelt() {
   const [selCat,       setSelCat]       = useState(null);
   const [formData,     setFormData]     = useState(null);
   const [celebrating,  setCelebrating]  = useState(false);
+  const [totalMessages, setTotalMessages] = useState(0);
 
-  // CHANGE 5: localStorage — cards persist across refresh and mobile sleep
   const [wallMessages, setWallMessages] = useState(() => {
     try {
       const saved = localStorage.getItem('hf_wall_messages');
@@ -883,12 +887,37 @@ export default function Heartfelt() {
     try { localStorage.setItem('hf_wall_messages', JSON.stringify(wallMessages)); } catch {}
   }, [wallMessages]);
 
-  const cat = CATS.find(c => c.id === selCat);
+  // Fetch real total count from Supabase on load
+  useEffect(() => {
+    fetch(`${SUPA_URL}/rest/v1/cards?select=id`, {
+      headers: { ...supa.headers, "Prefer": "count=exact", "Range": "0-0" }
+    }).then(r => {
+      const count = parseInt(r.headers.get("content-range")?.split("/")[1] || "0");
+      setTotalMessages(WALL_SEED.length + count);
+    }).catch(() => setTotalMessages(WALL_SEED.length + wallMessages.length));
+  }, []);
 
+  const cat = CATS.find(c => c.id === selCat);
   const goHome = () => { setPage("home"); setSelCat(null); setFormData(null); setCelebrating(false); };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (formData) {
+      const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      // Save to Supabase
+      fetch(`${SUPA_URL}/rest/v1/cards`, {
+        method: "POST",
+        headers: { ...supa.headers, "Prefer": "return=minimal" },
+        body: JSON.stringify({
+          id, cat: cat.id,
+          message: formData.message,
+          recipient: formData.recipient,
+          sender: formData.sender,
+          bg_mode: formData.bgMode,
+          font_id: formData.fontId,
+          shimmer_on: formData.shimmerOn,
+        })
+      }).then(() => setTotalMessages(t => t + 1)).catch(() => {});
+      // Also keep local wall
       setWallMessages(prev => [{
         id: Date.now(), cat: cat.id,
         message: formData.message,
@@ -901,7 +930,6 @@ export default function Heartfelt() {
   };
 
   // totalMessages: WALL_SEED is social proof baseline; real user cards add on top
-  const totalMessages = WALL_SEED.length + wallMessages.length;
 
   return (
     <>
