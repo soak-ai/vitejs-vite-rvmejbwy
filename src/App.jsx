@@ -908,7 +908,7 @@ export default function Heartfelt() {
             <button onClick={goHome} className="nav-item-press" style={{ display:"flex", alignItems:"center", gap:7, background:"none", border:"none", cursor:"pointer", padding:0, transition:"opacity .15s" }} onMouseOver={e=>e.currentTarget.style.opacity=".8"} onMouseOut={e=>e.currentTarget.style.opacity="1"}>
               <div style={{ width:40, height:40, borderRadius:11, background:"var(--ink)", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:20, fontWeight:700, lineHeight:1 }}>◇</div>
               <span style={{ fontSize:17, fontFamily:"'Lora',serif", fontStyle:"italic", fontWeight:600, color:"var(--ink)" }}>heartfelt</span>
-              <span style={{ fontSize:10, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"2px 7px", letterSpacing:".06em", fontFamily:"'Lato', sans-serif" }}>BETA</span>
+<span className="nav-logo-beta" style={{ fontSize:10, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"2px 7px", letterSpacing:".06em", fontFamily:"'Lato', sans-serif" }}>BETA</span>
             </button>
           </div>
 
@@ -965,7 +965,7 @@ export default function Heartfelt() {
               <div style={{ marginTop:48, paddingTop:20, borderTop:"1px solid var(--sand-200)", display:"flex", alignItems:"center", justifyContent:"center", gap:9 }}>
                 <span style={{ width:6, height:6, borderRadius:"50%", background:"#2e7d32", display:"inline-block", animation:"blinkDot 2.4s ease-in-out infinite" }}/>
                 <span style={{ fontSize:13, color:"var(--ink-3)" }}>
-                  {totalMessages} messages shared · free · no account needed
+{totalMessages} messages shared · free · no account needed · <span style={{ fontSize:11, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"1px 6px", letterSpacing:".06em" }}>BETA</span>
                 </span>
               </div>
             </div>
