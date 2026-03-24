@@ -686,7 +686,6 @@ function GratitudeWall({ wallMessages, onHome }) {
           })}
         </div>
       )}
-      )}
     </div>
   );
 }
