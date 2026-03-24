@@ -250,7 +250,7 @@ const Styles = () => (
     @keyframes floatUp     { 0%{transform:translateY(0) scale(1) rotate(0deg);opacity:1} 100%{transform:translateY(-160px) scale(.4) rotate(var(--spin,180deg));opacity:0} }
     @keyframes sentBounce  { 0%{transform:scale(0) rotate(-12deg);opacity:0} 60%{transform:scale(1.18) rotate(4deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
     @keyframes confDrop { 0%{transform:translateY(-8px) rotate(0);opacity:1} 100%{transform:translateY(90px) rotate(540deg);opacity:0} }
-@keyframes cardSeal { 0%{box-shadow:0 0 0 0 rgba(0,0,0,0)} 25%{box-shadow:0 0 22px 6px var(--seal-color)} 65%{box-shadow:0 0 22px 6px var(--seal-color)} 100%{box-shadow:0 0 0 0 rgba(0,0,0,0)} }
+@keyframes cardSeal { 0%{box-shadow:0 0 0 0 rgba(0,0,0,0)} 15%{box-shadow:0 0 22px 6px var(--seal-color)} 65%{box-shadow:0 0 22px 6px var(--seal-color)} 100%{box-shadow:0 0 0 0 rgba(0,0,0,0)} }
 @media (max-width: 700px) {
 .card-sealing { animation: cardSeal 1.9s ease-in-out both; }
 }
