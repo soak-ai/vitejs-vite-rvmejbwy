@@ -523,12 +523,6 @@ function ShareCTA({ accent, recip, onHome }) {
         onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#a8dbb8"; }}>
         {icon("💬")} Send via WhatsApp
       </button>
-      <button style={{ ...shareBtn, color:"#b5467a", border:"1.5px solid #f0b8d4" }}
-        onClick={() => { copy(); alert("Link copied! Paste it in your Instagram DM or Story."); }}
-        onMouseOver={e=>{ e.currentTarget.style.background="#fce8f2"; e.currentTarget.style.borderColor="transparent"; }}
-        onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#f0b8d4"; }}>
-        {icon("📷")} Share on Instagram
-      </button>
       <button style={{ ...shareBtn, color:copied?"#2e7d32":"#2563a8", border:`1.5px solid ${copied?"#a8dbb8":"#a8c4e8"}` }}
         onClick={copy}
         onMouseOver={e=>{ e.currentTarget.style.background=copied?"#e8f5e9":"#e8f0fb"; e.currentTarget.style.borderColor="transparent"; }}
