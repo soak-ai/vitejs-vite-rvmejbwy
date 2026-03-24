@@ -503,7 +503,8 @@ function AISuggest({ catId, onUse }) {
 
 // ── SHARE CTA ─────────────────────────────────────────────────────────────────
 function ShareCTA({ accent, recip, onHome }) {
-  const [copied, setCopied] = useState(false);
+const [copied, setCopied] = useState(false);
+  const [instacopied, setInstacopied] = useState(false);
   const link = "https://heartfelt-send.vercel.app/card?id=" + Math.random().toString(36).slice(2,9);
   const copy = () => {
     navigator.clipboard.writeText(link).catch(() => {});
@@ -527,19 +528,18 @@ function ShareCTA({ accent, recip, onHome }) {
         onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#a8dbb8"; }}>
         {icon("💬")} Send via WhatsApp
       </button>
+      <button style={{ ...shareBtn, color:"#b5467a", border:"1.5px solid #f0b8d4" }}
+        onClick={() => { navigator.clipboard.writeText(link).catch(()=>{}); setInstacopied(true); setTimeout(()=>setInstacopied(false),2500); }}
+        onMouseOver={e=>{ e.currentTarget.style.background="#fce8f2"; e.currentTarget.style.borderColor="transparent"; }}
+        onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#f0b8d4"; }}>
+        {icon(instacopied?"✓":"📷")} {instacopied?"Copied! Paste in Instagram DM.":"Share on Instagram"}
+      </button>
       <button style={{ ...shareBtn, color:copied?"#2e7d32":"#2563a8", border:`1.5px solid ${copied?"#a8dbb8":"#a8c4e8"}` }}
         onClick={copy}
         onMouseOver={e=>{ e.currentTarget.style.background=copied?"#e8f5e9":"#e8f0fb"; e.currentTarget.style.borderColor="transparent"; }}
         onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor=copied?"#a8dbb8":"#a8c4e8"; }}>
-        {icon(copied?"✓":"🔗")} {copied ? "Copied! Paste it anywhere." : "Copy link"}
+        {icon(copied?"✓":"🔗")} {copied?"Copied! Paste it anywhere.":"Copy link"}
       </button>
-      {/* Instagram */}
-<button style={{ ...shareBtn, color:"#b5467a", border:"1.5px solid #f0b8d4" }}
-  onClick={() => { copy(); alert("Link copied! Paste it in your Instagram DM or Story."); }}
-  onMouseOver={e=>{ e.currentTarget.style.background="#fce8f2"; e.currentTarget.style.borderColor="transparent"; }}
-  onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#f0b8d4"; }}>
-  {icon("📷")} Share on Instagram
-</button>
       <div style={{ height:1, background:"var(--sand-200)", margin:"6px 0" }}/>
       <div style={{ display:"flex", justifyContent:"center", marginTop:6 }}>
         <button style={{ padding:"7px 18px", borderRadius:999, fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:400, color:"var(--ink-3)", cursor:"pointer", display:"inline-flex", alignItems:"center", gap:5, border:"1.5px solid var(--sand-300)", background:"transparent", transition:"border-color .18s, color .18s, background .18s" }}
@@ -658,8 +658,8 @@ function GratitudeWall({ wallMessages, onHome }) {
 
       {/* ── CARDS — real user cards only, flat grid ── */}
       {!isEmpty && (
-        <div className="masonry-grid">
-          {wallMessages.map((item, i) => {
+        <div className="masonry-grid" style={{ alignItems:"stretch" }}>
+          {wallMessages.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
             const isNew = !!item.isNew && (Date.now() - item.id) < 10*60*1000;
@@ -685,6 +685,7 @@ function GratitudeWall({ wallMessages, onHome }) {
             );
           })}
         </div>
+      )}
       )}
     </div>
   );
