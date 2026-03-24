@@ -187,7 +187,7 @@ const Styles = () => (
       .compose-preview { position: static !important; }
     }
     @media (max-width: 680px) {
-      .nav-wrap { padding: 0 16px !important; }
+      .nav-wrap { padding: 0 12px !important; }
       .page-wrap { padding: 0 16px !important; }
     }
     /* Mobile: single column for cat cards and wall — one card at a time, calm feel */
@@ -905,7 +905,7 @@ export default function Heartfelt() {
         <div className="nav-wrap" style={{ maxWidth:1152, margin:"0 auto", padding:"0 32px", height:"100%", display:"flex", alignItems:"center", position:"relative" }}>
 
           <div style={{ flex:1, display:"flex", alignItems:"center" }}>
-            <button onClick={goHome} className="nav-item-press" style={{ display:"flex", alignItems:"center", gap:9, background:"none", border:"none", cursor:"pointer", padding:0, transition:"opacity .15s" }} onMouseOver={e=>e.currentTarget.style.opacity=".8"} onMouseOut={e=>e.currentTarget.style.opacity="1"}>
+            <button onClick={goHome} className="nav-item-press" style={{ display:"flex", alignItems:"center", gap:7, background:"none", border:"none", cursor:"pointer", padding:0, transition:"opacity .15s" }} onMouseOver={e=>e.currentTarget.style.opacity=".8"} onMouseOut={e=>e.currentTarget.style.opacity="1"}>
               <div style={{ width:40, height:40, borderRadius:11, background:"var(--ink)", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:20, fontWeight:700, lineHeight:1 }}>◇</div>
               <span style={{ fontSize:17, fontFamily:"'Lora',serif", fontStyle:"italic", fontWeight:600, color:"var(--ink)" }}>heartfelt</span>
               <span style={{ fontSize:10, color:"var(--ink-3)", border:"1px solid var(--sand-200)", borderRadius:999, padding:"2px 7px", letterSpacing:".06em", fontFamily:"'Lato', sans-serif" }}>BETA</span>
