@@ -463,10 +463,10 @@ function AISuggest({ catId, onUse }) {
   );
 
   return (
-<div style={{ borderRadius:12, border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.88)", padding:"14px 16px", minHeight:154 }}>
+<div style={{ borderRadius:12, border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.88)", padding:"14px 16px", minHeight:148 }}>
     <div style={{ fontSize:11, color:"var(--ink-3)", marginBottom:8 }}>✦ heartfelt suggestion</div>
       {loading
-? <div style={{ display:"flex", gap:6, alignItems:"center", justifyContent:"center", minHeight:96, minWidth:"100%" }}>
+? <div style={{ display:"flex", gap:6, alignItems:"center", justifyContent:"center", minHeight:96 }}>
       {[0,1,2].map(i => <div key={i} style={{ width:7, height:7, borderRadius:"50%", background:"var(--sand-200)", animation:`aiPulse 1.2s ease ${i*.2}s infinite` }}/>)}
           </div>
         : <>
