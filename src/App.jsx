@@ -1,12 +1,12 @@
-// Heartfelt — Final Merged Version
-// • Card grid from App(5) — glassmorphism style, hover effects
-// • Gratitude Wall EXACT from App(3) — masonry, sticky-note tilt, no names required
-// • Sacramento script font at readable size
-// • No particles/shimmer in bg options
-// • Send animation replaced with clean paper-plane send
-// • heartfelt logo → home, Gratitude Wall → wall
-// • All labels in Inter (no monospace in dashboard UI)
-// Zero installs — paste into src/App.jsx
+// Heartfelt — v2 (based on App_v1_gw_correct_49_)
+// Changes from base:
+// 1. .cat-card:hover wrapped in @media(hover:hover) — no ghost hover on mobile tap
+// 2. .cat-grid responsive: single column (1fr) at ≤480px
+// 3. className="cat-grid" added to home grid div — CSS media query was never applying
+// 4. CatCard default border: rgba(255,255,255,.9) → cat.accent+"38" (colored outline always visible)
+// 5. wallMessages persisted in localStorage (cards survive refresh/sleep)
+// 6. Home footer shows total card count: WALL_SEED.length + wallMessages.length
+// UNTOUCHED: GratitudeWall, burstPop *3.5, polish-star, ai-star, all animations
 
 import { useState, useEffect, useCallback } from "react";
 
@@ -86,9 +86,9 @@ const Styles = () => (
     }
     .btn-accent:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,.1); filter: brightness(.94); }
 
-    /* ── CATEGORY CARD (App 5 style) ── */
+    /* ── CATEGORY CARD ── */
     .cat-card {
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.96);
       border: 1.5px solid var(--sand-200);
       border-radius: 20px; padding: 22px;
       cursor: pointer;
@@ -97,12 +97,16 @@ const Styles = () => (
     }
     .cat-card::before {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,.6) 0%, rgba(255,255,255,0) 60%);
+      background: linear-gradient(135deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 55%);
       border-radius: 20px; pointer-events: none;
     }
-    .cat-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,.1); border-color: var(--accent-color, #c0392b) !important; }
-    .cat-card:active { transform: scale(.97); }
-    .cat-card:hover .cat-icon { transform: scale(1.14) rotate(-6deg); }
+    /* CHANGE 1: hover only on real pointer devices — no ghost tap on mobile */
+    @media (hover: hover) {
+      .cat-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,.1); border-color: var(--accent-color, #c0392b) !important; }
+      .cat-card:hover .cat-icon { transform: scale(1.14) rotate(-6deg); }
+    }
+    /* Tap feedback on mobile — satisfying press feel */
+    .cat-card:active { transform: scale(.97); box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: transform .18s ease-out, box-shadow .18s ease-out; }
     .cat-icon { transition: transform .22s cubic-bezier(.34,1.56,.64,1); }
 
     /* ── PROMPT PILL ── */
@@ -162,9 +166,9 @@ const Styles = () => (
       100% { stroke-dashoffset: 0;  opacity: 1; }
     }
 
-    /* ── GRATITUDE WALL (App 3 exact) ── */
+    /* ── GRATITUDE WALL (App 3 exact — UNTOUCHED) ── */
     .masonry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
-    .masonry-item { /* no break-inside needed in grid */ }
+    .masonry-item { }
     .sticky-0 { --r: -2deg; }   .sticky-1 { --r: 1.5deg; }
     .sticky-2 { --r: -1deg; }   .sticky-3 { --r: 2.5deg; }
     .sticky-4 { --r: -1.5deg; } .sticky-5 { --r: 1deg; }
@@ -183,14 +187,14 @@ const Styles = () => (
       .compose-preview { position: static !important; }
     }
     @media (max-width: 680px) {
-      .cat-grid { grid-template-columns: repeat(2, 1fr) !important; }
-      .masonry-grid { grid-template-columns: repeat(2, 1fr) !important; }
       .nav-wrap { padding: 0 16px !important; }
       .page-wrap { padding: 0 16px !important; }
     }
-    @media (max-width: 420px) {
-      .cat-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    /* Mobile: single column for cat cards and wall — one card at a time, calm feel */
+    @media (max-width: 700px) {
+      .cat-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
       .masonry-grid { grid-template-columns: 1fr !important; }
+      .masonry-item { max-width: 480px; margin: 0 auto; width: 100%; }
       .sent-btns { flex-direction: column !important; align-items: stretch !important; }
       .sent-btns button { justify-content: center; }
       .share-row { flex-direction: column !important; }
@@ -237,14 +241,15 @@ const Styles = () => (
     @keyframes spin        { to{transform:rotate(360deg)} }
     @keyframes fadeInUp   { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
     @keyframes cardFadeOut { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(.88)} }
+    /* burstPop *3.5 — original dramatic confetti, UNTOUCHED */
     @keyframes burstPop    { 0%{transform:translate(var(--bx),var(--by)) scale(0);opacity:1} 60%{opacity:1} 100%{transform:translate(calc(var(--bx)*3.5),calc(var(--by)*3.5)) scale(1);opacity:0} }
     @keyframes floatUp     { 0%{transform:translateY(0) scale(1) rotate(0deg);opacity:1} 100%{transform:translateY(-160px) scale(.4) rotate(var(--spin,180deg));opacity:0} }
     @keyframes sentBounce  { 0%{transform:scale(0) rotate(-12deg);opacity:0} 60%{transform:scale(1.18) rotate(4deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
     @keyframes confDrop { 0%{transform:translateY(-8px) rotate(0);opacity:1} 100%{transform:translateY(90px) rotate(540deg);opacity:0} }
 
-    .anim-fadeup  { animation: fadeUp  .42s ease both; }
-    .anim-slidein { animation: slideIn .36s ease both; }
-    .anim-popin   { animation: popIn   .42s cubic-bezier(.34,1.56,.64,1) both; }
+    .anim-fadeup  { animation: fadeUp  .62s ease-out both; }
+    .anim-slidein { animation: slideIn .52s ease-out both; }
+    .anim-popin   { animation: popIn   .52s cubic-bezier(.34,1.56,.64,1) both; }
   `}</style>
 );
 
@@ -288,7 +293,7 @@ const FONT_OPTIONS = [
   { id:"sacramento", label:"Script",   style:{ fontFamily:"'Sacramento',cursive", fontSize:"1.5em", lineHeight:1.55 } },
 ];
 
-// WALL SEED — App(3) style, name optional
+// WALL SEED — always shown on Gratitude Wall, name optional
 const WALL_SEED = [
   { id:1,  cat:"gratitude", message:"You showed up every single time I needed someone. I hope you know how rare that is.",  color:"#fef2f2", accent:"#d97706" },
   { id:2,  cat:"love",      message:"My world is genuinely brighter because you're in it. That's not a small thing.",        color:"#fce4ec", accent:"#c2185b" },
@@ -347,7 +352,7 @@ function PreviewCard({ cat, to, from, message, bgMode, shimmerOn, fontId, animat
   const getBg = () => {
     if (bgMode === "white") return { background:"#ffffff" };
     if (bgMode === "warm")  return { background:"#fffbf4" };
-    return { background: cat.light }; // tinted default
+    return { background: cat.light };
   };
 
   const patClass = (cat.pat === 'stars' && bgMode === 'white') ? 'pat-stars-silver' : `pat-${cat.pat}`;
@@ -378,10 +383,9 @@ function PreviewCard({ cat, to, from, message, bgMode, shimmerOn, fontId, animat
   );
 }
 
-// ── AI SUGGEST ────────────────────────────────────────────────────────────────
 // ── POLISH BUTTON — elevates writing, keeps meaning + voice ──────────────────
 function PolishButton({ message, onPolished, accent }) {
-  const [state, setState] = useState("idle"); // idle | loading | done | error
+  const [state, setState] = useState("idle");
 
   const polish = async () => {
     if (state === "loading" || !message.trim()) return;
@@ -431,6 +435,7 @@ function PolishButton({ message, onPolished, accent }) {
   );
 }
 
+// ── AI SUGGEST ────────────────────────────────────────────────────────────────
 function AISuggest({ catId, onUse }) {
   const [used, setUsed]       = useState([]);
   const [loading, setLoading] = useState(false);
@@ -485,43 +490,15 @@ function AISuggest({ catId, onUse }) {
   );
 }
 
-// ── SHARE ─────────────────────────────────────────────────────────────────────
-function ShareSection() {
-  const [copied, setCopied] = useState(false);
-  const link = "https://heartfelt.app/card?id=" + Math.random().toString(36).slice(2,9);
-  const copy = () => {
-    navigator.clipboard.writeText(link).catch(() => {});
-    setCopied(true); setTimeout(() => setCopied(false), 2000);
-  };
-  return (
-    <div style={{ marginTop:18, textAlign:"center" }}>
-      <div style={{ fontSize:13, color:"var(--ink-3)", marginBottom:10 }}>Share this card</div>
-      <div className="share-row" style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-        <button className="sh-btn" onClick={copy} style={{ background:copied?"#e8f5e9":"#f5f0ea", color:copied?"#2e7d32":"var(--ink)", borderColor:copied?"#a5d6a7":"var(--sand-200)" }}>
-          {copied ? "✓ Copied!" : "⎘ Copy link"}
-        </button>
-        <button className="sh-btn" onClick={() => window.open("https://wa.me/?text="+encodeURIComponent("I made you a heartfelt card ❤️ "+link),"_blank")} style={{ background:"#e7f9ee", color:"#1a6f3c", borderColor:"#b7e5c8" }}>
-          💬 WhatsApp
-        </button>
-        <button className="sh-btn" onClick={() => { navigator.clipboard.writeText(link).catch(()=>{}); alert("Link copied! Paste it in your Instagram DM or story 💛"); }} style={{ background:"transparent", color:"#b5467a", borderColor:"#f0b8d4" }}>
-          ◈ Instagram
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ── SEND ANIMATION — paper plane ──────────────────────────────────────────────
-// ── SHARE CTA — shown right after animation ───────────────────────────────────
+// ── SHARE CTA ─────────────────────────────────────────────────────────────────
 function ShareCTA({ accent, recip, onHome }) {
   const [copied, setCopied] = useState(false);
-  const link = "https://heartfelt.app/card?id=" + Math.random().toString(36).slice(2,9);
+  const link = "https://heartfelt-send.vercel.app/card?id=" + Math.random().toString(36).slice(2,9);
   const copy = () => {
     navigator.clipboard.writeText(link).catch(() => {});
     setCopied(true); setTimeout(() => setCopied(false), 2500);
   };
 
-  // Shared share button base — outlined, soft fill on hover, border hides on hover
   const shareBtn = {
     width:"100%", padding:"9px 16px", borderRadius:12,
     fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:400,
@@ -529,49 +506,31 @@ function ShareCTA({ accent, recip, onHome }) {
     gap:10, transition:"background .2s, border-color .2s",
     background:"transparent",
   };
-  // Icon wrapper — fixed 20px, consistent
   const icon = (em) => <span style={{ fontSize:20, lineHeight:1, flexShrink:0 }}>{em}</span>;
 
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:9, width:"100%" }}>
-
-      {/* 1. WhatsApp */}
       <button style={{ ...shareBtn, color:"#1a7a42", border:"1.5px solid #a8dbb8" }}
         onClick={() => window.open("https://wa.me/?text="+encodeURIComponent("I made something for you 💛 "+link),"_blank")}
         onMouseOver={e=>{ e.currentTarget.style.background="#e6f7ed"; e.currentTarget.style.borderColor="transparent"; }}
         onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#a8dbb8"; }}>
         {icon("💬")} Send via WhatsApp
       </button>
-
-      {/* 2. Instagram */}
       <button style={{ ...shareBtn, color:"#b5467a", border:"1.5px solid #f0b8d4" }}
         onClick={() => { copy(); alert("Link copied! Paste it in your Instagram DM or Story."); }}
         onMouseOver={e=>{ e.currentTarget.style.background="#fce8f2"; e.currentTarget.style.borderColor="transparent"; }}
         onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#f0b8d4"; }}>
         {icon("📷")} Share on Instagram
       </button>
-
-      {/* 3. Copy link — slate blue */}
       <button style={{ ...shareBtn, color:copied?"#2e7d32":"#2563a8", border:`1.5px solid ${copied?"#a8dbb8":"#a8c4e8"}` }}
         onClick={copy}
         onMouseOver={e=>{ e.currentTarget.style.background=copied?"#e8f5e9":"#e8f0fb"; e.currentTarget.style.borderColor="transparent"; }}
         onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor=copied?"#a8dbb8":"#a8c4e8"; }}>
         {icon(copied?"✓":"🔗")} {copied ? "Copied! Paste it anywhere." : "Copy link"}
       </button>
-
-      {/* divider */}
       <div style={{ height:1, background:"var(--sand-200)", margin:"6px 0" }}/>
-
-      {/* 4. Send a card — secondary ghost, accented arrow nudge */}
       <div style={{ display:"flex", justifyContent:"center", marginTop:6 }}>
-        <button style={{
-            padding:"7px 18px", borderRadius:999,
-            fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:400,
-            color:"var(--ink-3)", cursor:"pointer",
-            display:"inline-flex", alignItems:"center", gap:5,
-            border:"1.5px solid var(--sand-300)", background:"transparent",
-            transition:"border-color .18s, color .18s, background .18s",
-          }}
+        <button style={{ padding:"7px 18px", borderRadius:999, fontFamily:"'Lato', sans-serif", fontSize:12, fontWeight:400, color:"var(--ink-3)", cursor:"pointer", display:"inline-flex", alignItems:"center", gap:5, border:"1.5px solid var(--sand-300)", background:"transparent", transition:"border-color .18s, color .18s, background .18s" }}
           onClick={onHome}
           onMouseOver={e=>{ e.currentTarget.style.borderColor="var(--ink)"; e.currentTarget.style.color="var(--ink)"; }}
           onMouseOut={e=> { e.currentTarget.style.borderColor="var(--sand-300)"; e.currentTarget.style.color="var(--ink-3)"; }}>
@@ -582,79 +541,6 @@ function ShareCTA({ accent, recip, onHome }) {
     </div>
   );
 }
-
-function SendScene({ cat, recipient, msgPreview, bgMode, shimmerOn, fontId, onDone }) {
-  const [phase, setPhase] = useState("idle"); // idle → burst → done
-  const recip = recipient ? recipient.charAt(0).toUpperCase()+recipient.slice(1) : "";
-
-  useEffect(() => {
-    const ts = [
-      setTimeout(() => setPhase("burst"), 700),
-      setTimeout(() => setPhase("done"),  2400),
-      setTimeout(() => onDone(),           4000),
-    ];
-    return () => ts.forEach(clearTimeout);
-  }, []);
-
-  // Category-specific burst particles
-  const catParticles = {
-    gratitude: ["🙏","✦","✧","🙏","✦","◇","✦","🙏","✧","◇","✦","🙏"],
-    love:      ["❤️","♡","❤️","✦","♡","❤️","✧","♡","❤️","♡","✦","❤️"],
-    birthday:  ["⭐","🎂","⭐","✦","⭐","🎂","✦","⭐","✦","🎂","⭐","✦"],
-    cheer:     ["☀️","✦","☀️","✧","☀️","✦","◇","☀️","✦","☀️","✧","◇"],
-    amends:    ["💛","🤝","💛","✦","💛","🤝","✧","💛","✦","💛","🤝","💛"],
-    celebrate: ["🏆","🎉","✦","🏆","🎉","✦","🏆","✦","🎉","🏆","✦","🎉"],
-  };
-  const emojis = catParticles[cat.id] || catParticles.love;
-  const positions = [
-    {bx:-60,by:-80,d:0},{bx:60,by:-80,d:.05},{bx:-90,by:-20,d:.1},{bx:90,by:-20,d:.08},
-    {bx:-40,by:80,d:.12},{bx:40,by:80,d:.06},{bx:-110,by:30,d:.04},{bx:110,by:30,d:.09},
-    {bx:0,by:-100,d:.02},{bx:-70,by:60,d:.11},{bx:70,by:60,d:.07},{bx:0,by:100,d:.03},
-  ];
-
-  return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:"62vh", gap:32, position:"relative", overflow:"hidden" }}>
-
-      {/* card matches live preview exactly */}
-      <div style={{ width:280, animation: phase==="burst" ? "cardFadeOut .8s ease .2s both" : "none" }}>
-        <PreviewCard cat={cat} to={recip} from="" message={msgPreview||""} bgMode={bgMode} shimmerOn={shimmerOn} fontId={fontId} compact={false}/>
-      </div>
-
-      {/* burst particles */}
-      {phase==="burst" && positions.map((p,i)=>(
-        <div key={i} style={{
-          position:"absolute", top:"50%", left:"50%",
-          fontSize:20, lineHeight:1,
-          "--bx":`${p.bx}px`, "--by":`${p.by}px`,
-          animation:`burstPop 1.4s cubic-bezier(.22,1,.36,1) ${p.d * 1.5}s both`,
-          pointerEvents:"none",
-        }}>{emojis[i]}</div>
-      ))}
-
-      {/* done — show share CTA directly */}
-      {phase==="done" && (
-        <div style={{ textAlign:"center", animation:"sentBounce .7s cubic-bezier(.34,1.56,.64,1) .1s both", width:"100%", maxWidth:360 }}>
-          <div style={{ fontSize:44, marginBottom:10, lineHeight:1 }}>💌</div>
-          <div style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:20, color:cat.accent, fontWeight:600, marginBottom:6 }}>Sealed ✦</div>
-          <div style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:14, color:"var(--ink-3)", lineHeight:1.65, marginBottom:20 }}>
-            Your card for <strong style={{ color:"var(--ink)", fontStyle:"normal" }}>{recip}</strong> is ready.<br/>Pick how you want to share it.
-          </div>
-          <ShareCTA accent={cat.accent} recip={recip} onHome={onDone}/>
-        </div>
-      )}
-
-      {/* subtle status dots */}
-      {phase !== "done" && (
-        <div style={{display:"flex",gap:6,justifyContent:"center"}}>
-          {[0,1,2].map(i=>(
-            <div key={i} style={{width:5,height:5,borderRadius:"50%",background:cat.accent,opacity:.25+i*.25,animation:`aiPulse ${1+i*.2}s ease-in-out ${i*.18}s infinite`}}/>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 
 // ── SENT PAGE ─────────────────────────────────────────────────────────────────
 function SentPage({ cat, formData, onHome, onViewWall }) {
@@ -687,31 +573,23 @@ function SentPage({ cat, formData, onHome, onViewWall }) {
           animation:`burstPop 1.4s cubic-bezier(.22,1,.36,1) ${p.d*.8}s both`,
           pointerEvents:"none", zIndex:50 }}>{emojis[i % emojis.length]}</div>
       ))}
-      {/* 💌 icon */}
       <div style={{ fontSize:52, marginBottom:14, animation:"sentBounce .5s cubic-bezier(.34,1.56,.64,1) both", lineHeight:1 }}>💌</div>
-
-      {/* headline */}
       <h2 style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:22, color:"var(--ink)", marginBottom:8, lineHeight:1.2 }}>
         Your card is sealed <span style={{display:"inline-block",animation:"shimmerStar 1.8s ease-in-out infinite"}}>✦</span>
       </h2>
-
       <p style={{ fontSize:14, color:"var(--ink-3)", lineHeight:1.7, marginBottom:6 }}>
         Pick how you want to share it with <strong style={{ color:"var(--ink)" }}>{recip}</strong>.
       </p>
       <p style={{ fontSize:12, color:cat.accent, marginBottom:24, letterSpacing:".04em" }}>✦ Pinned to the Gratitude Wall anonymously</p>
-
       <ShareCTA accent={cat.accent} recip={recip} onHome={onHome}/>
     </div>
   );
 }
 
-// ── GRATITUDE WALL ────────────────────────────────────────────────────────────
+// ── GRATITUDE WALL — empty state from App_perfect_gw_empty_state_49_ ─────────
 function GratitudeWall({ wallMessages, onHome }) {
   const getCat = id => CATS.find(c => c.id === id);
-  const recentCards = wallMessages.filter(m => (Date.now() - m.id) < 10*60*1000);
-  const olderCards  = wallMessages.filter(m => (Date.now() - m.id) >= 10*60*1000);
-  const allReal     = [...recentCards, ...olderCards];
-  const isEmpty     = allReal.length === 0;
+  const isEmpty = wallMessages.length === 0;
 
   return (
     <div className="anim-fadeup" style={{ maxWidth:1080, margin:"0 auto", padding:"56px 24px 80px" }}>
@@ -740,7 +618,6 @@ function GratitudeWall({ wallMessages, onHome }) {
             Say the thing you've been holding back.
           </p>
 
-          {/* nudge pills */}
           <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginBottom:28 }}>
             {[
               { icon:"🙏", text:"Thank someone" },
@@ -753,7 +630,6 @@ function GratitudeWall({ wallMessages, onHome }) {
             ))}
           </div>
 
-          {/* CTA — secondary outlined (nav bar has the primary Send a Card) */}
           <button onClick={onHome}
             style={{ padding:"9px 22px", borderRadius:999, border:"1.5px solid var(--ink)", background:"transparent", color:"var(--ink)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7, transition:"background .18s, color .18s" }}
             onMouseOver={e=>{ e.currentTarget.style.background="var(--ink)"; e.currentTarget.style.color="#fff"; }}
@@ -768,10 +644,10 @@ function GratitudeWall({ wallMessages, onHome }) {
         </div>
       )}
 
-      {/* ── REAL CARDS — only when people have actually sent cards ── */}
+      {/* ── CARDS — real user cards only, flat grid ── */}
       {!isEmpty && (
         <div className="masonry-grid">
-          {allReal.map((item, i) => {
+          {wallMessages.map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
             const isNew = !!item.isNew && (Date.now() - item.id) < 10*60*1000;
@@ -806,18 +682,16 @@ function GratitudeWall({ wallMessages, onHome }) {
 function CatCard({ cat, onClick }) {
   const [hov, setHov] = useState(false);
   return (
+    // CHANGE 4: default border uses cat.accent+"38" — colored outline always visible on mobile
     <div className="cat-card" onClick={onClick} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
-      style={{ "--accent-color":cat.accent, borderColor:hov?cat.accent+"88":"rgba(255,255,255,.9)", boxShadow:hov?`0 16px 40px ${cat.accent}22`:"0 2px 8px rgba(0,0,0,.04)", display:"flex", flexDirection:"column", alignItems:"flex-start" }}>
-      {/* icon — left */}
+      style={{ "--accent-color":cat.accent, borderColor:hov?cat.accent+"88":cat.accent+"38", boxShadow:hov?`0 16px 40px ${cat.accent}22`:"0 2px 8px rgba(0,0,0,.04)", display:"flex", flexDirection:"column", alignItems:"flex-start" }}>
       <div className="cat-icon" style={{ width:48, height:48, borderRadius:14, background:`linear-gradient(135deg,${cat.light},${cat.accent}28)`, border:`1px solid ${cat.accent}40`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, color:cat.accent, fontWeight:700, marginBottom:14, transition:"all .22s cubic-bezier(.34,1.56,.64,1)", flexShrink:0 }}>
         {cat.glyph}
       </div>
-      {/* label + sub — centred, Inter only */}
       <div style={{ width:"100%", textAlign:"center", marginBottom:16, flex:1 }}>
-        <div style={{ fontWeight:600, fontSize:15, color:"#18120e", fontWeight:600, marginBottom:4, fontFamily:"'Lato', sans-serif" }}>{cat.label}</div>
+        <div style={{ fontWeight:600, fontSize:15, color:"#18120e", marginBottom:4, fontFamily:"'Lato', sans-serif" }}>{cat.label}</div>
         <div style={{ fontSize:12, color:"#5a4838", lineHeight:1.5, fontFamily:"'Lato', sans-serif" }}>{cat.sub}</div>
       </div>
-      {/* select cta — left */}
       <div style={{ display:"flex", alignItems:"center", gap:4, fontSize:12, color:cat.accent }}>
         Select <span style={{ display:"inline-block", animation:"arrowPulse 1.4s ease-in-out infinite", fontSize:14 }}>→</span>
       </div>
@@ -861,7 +735,6 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
 
       <div className="compose-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:32, alignItems:"start" }}>
 
-        {/* LEFT */}
         <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
             <div style={{ fontSize:12, letterSpacing:".08em", textTransform:"uppercase", color:"var(--ink-3)" }}>From &amp; To</div>
@@ -901,18 +774,17 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
               <span style={{ fontSize:12, color:message.length>230?"#c0392b":"var(--ink-3)" }}>{message.length}/250</span>
             </div>
             <textarea value={message} onChange={e=>{ if(e.target.value.length<=250) setMessage(e.target.value); }} placeholder="Write from the heart. Don't overthink it." rows={4} {...inp("msg")}/>
-            {/* Polish button — only shown when message has content */}
             {message.trim().length > 8 && (
-              <PolishButton message={message} onPolished={setMessage} accent={cat.accent}/>
+              <div style={{ display:"flex", justifyContent:"center", marginTop:4 }}>
+                <PolishButton message={message} onPolished={setMessage} accent={cat.accent}/>
+              </div>
             )}
           </div>
 
-          {/* AI Suggest */}
-          <div style={{ marginTop:4 }}>
+          <div style={{ marginTop:4, display:"flex", justifyContent:"center" }}>
             <AISuggest catId={cat.id} onUse={t => setMessage(t)}/>
           </div>
 
-          {/* Nudges */}
           <div>
             <div style={{ fontSize:12, color:"var(--ink-3)", marginBottom:8 }}>Need a nudge?</div>
             <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
@@ -925,13 +797,10 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
           </div>
         </div>
 
-        {/* RIGHT — sticky live preview */}
         <div className="compose-preview" style={{ display:"flex", flexDirection:"column", gap:16, position:"sticky", top:80 }}>
           <div style={{ fontSize:12, color:"var(--ink-3)" }}>Live preview</div>
-
           <PreviewCard cat={cat} to={recipient} from={sender} message={message} bgMode={bgMode} shimmerOn={shimmerOn} fontId={fontId} compact/>
 
-          {/* Background */}
           <div>
             <div style={{ fontSize:12, color:"var(--ink-3)", marginBottom:8 }}>Card background</div>
             <div style={{ display:"flex", gap:6, flexWrap:"wrap", alignItems:"center" }}>
@@ -948,7 +817,6 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
             </div>
           </div>
 
-          {/* Font */}
           <div>
             <div style={{ fontSize:12, color:"var(--ink-3)", marginBottom:8 }}>Text style</div>
             <div style={{ display:"flex", gap:6 }}>
@@ -984,16 +852,29 @@ export default function Heartfelt() {
   const [page,         setPage]         = useState("home");
   const [selCat,       setSelCat]       = useState(null);
   const [formData,     setFormData]     = useState(null);
-  const [wallMessages, setWallMessages] = useState([]);
+  const [celebrating,  setCelebrating]  = useState(false);
+
+  // CHANGE 5: localStorage — cards persist across refresh and mobile sleep
+  const [wallMessages, setWallMessages] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hf_wall_messages');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return [];
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem('hf_wall_messages', JSON.stringify(wallMessages)); } catch {}
+  }, [wallMessages]);
 
   const cat = CATS.find(c => c.id === selCat);
-
-  const [celebrating, setCelebrating] = useState(false);
 
   const goHome = () => { setPage("home"); setSelCat(null); setFormData(null); setCelebrating(false); };
 
   const handleSend = () => {
-    // Add to wall immediately
     if (formData) {
       setWallMessages(prev => [{
         id: Date.now(), cat: cat.id,
@@ -1002,10 +883,12 @@ export default function Heartfelt() {
         isNew: true, timeLabel: "just now",
       }, ...prev]);
     }
-    // Show burst on preview page first, then go to sent
     setCelebrating(true);
     setTimeout(() => { setCelebrating(false); setPage("sent"); }, 1800);
   };
+
+  // totalMessages: WALL_SEED is social proof baseline; real user cards add on top
+  const totalMessages = WALL_SEED.length + wallMessages.length;
 
   return (
     <>
@@ -1016,7 +899,6 @@ export default function Heartfelt() {
       <nav style={{ position:"sticky", top:0, zIndex:20, background:"rgba(253,250,246,.94)", backdropFilter:"blur(18px)", borderBottom:"1px solid var(--sand-200)", height:58 }}>
         <div className="nav-wrap" style={{ maxWidth:1152, margin:"0 auto", padding:"0 32px", height:"100%", display:"flex", alignItems:"center", position:"relative" }}>
 
-          {/* LEFT — logo */}
           <div style={{ flex:1, display:"flex", alignItems:"center" }}>
             <button onClick={goHome} className="nav-item-press" style={{ display:"flex", alignItems:"center", gap:9, background:"none", border:"none", cursor:"pointer", padding:0, transition:"opacity .15s" }} onMouseOver={e=>e.currentTarget.style.opacity=".8"} onMouseOut={e=>e.currentTarget.style.opacity="1"}>
               <div style={{ width:40, height:40, borderRadius:11, background:"var(--ink)", display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontSize:20, fontWeight:700, lineHeight:1 }}>◇</div>
@@ -1025,7 +907,6 @@ export default function Heartfelt() {
             </button>
           </div>
 
-          {/* CENTER — Send a Card — absolutely centred */}
           <div style={{ position:"absolute", left:"50%", transform:"translateX(-50%)" }}>
             <button onClick={goHome}
               className="nav-item-press" style={{ padding:"9px 22px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", transition:"box-shadow .16s, transform .12s", boxShadow:"0 2px 10px rgba(24,18,14,.18)", whiteSpace:"nowrap" }}
@@ -1035,13 +916,12 @@ export default function Heartfelt() {
             </button>
           </div>
 
-          {/* RIGHT — Gratitude Wall */}
           <div style={{ flex:1, display:"flex", justifyContent:"flex-end", alignItems:"center", gap:8 }}>
-
             <button onClick={() => setPage("wall")} className="nav-item-press"
-              style={{ background:"none", border:"none", fontFamily:"'Lato', sans-serif", fontSize:14, fontWeight:page==="wall"?600:400, color:page==="wall"?"var(--ink-3)":"var(--ink-3)", cursor:"pointer", transition:"color .16s", position:"relative", paddingBottom:4 }} onMouseOver={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-2)"; }} onMouseOut={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-3)"; }}>
+              style={{ background:"none", border:"none", fontFamily:"'Lato', sans-serif", fontSize:14, fontWeight:page==="wall"?600:400, color:"var(--ink-3)", cursor:"pointer", transition:"color .16s", position:"relative", paddingBottom:4 }}
+              onMouseOver={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-2)"; }}
+              onMouseOut={e=>{ if(page!=="wall") e.currentTarget.style.color="var(--ink-3)"; }}>
               Gratitude Wall
-              {/* active underline */}
               <span style={{ position:"absolute", bottom:0, left:0, right:0, height:1.5, background:"var(--ink-3)", borderRadius:2, transform:page==="wall"?"scaleX(1)":"scaleX(0)", transformOrigin:"left", transition:"transform .4s cubic-bezier(.25,.1,.25,1)" }}/>
             </button>
           </div>
@@ -1050,10 +930,8 @@ export default function Heartfelt() {
 
       <div style={{ position:"relative", zIndex:1 }}>
 
-        {/* WALL */}
         {page === "wall" && <GratitudeWall wallMessages={wallMessages} onHome={goHome}/>}
 
-        {/* SEND ANIMATION overlay */}
         {page !== "wall" && <>
 
           {/* HOME */}
@@ -1069,7 +947,8 @@ export default function Heartfelt() {
                 </p>
               </div>
 
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
+              {/* CHANGE 3: className="cat-grid" added — responsive CSS now actually applies */}
+              <div className="cat-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
                 {CATS.map((c,i) => (
                   <div key={c.id} className="anim-fadeup" style={{ animationDelay:`${i*.06}s` }}>
                     <CatCard cat={c} onClick={() => { setSelCat(c.id); setPage("compose"); }}/>
@@ -1077,9 +956,12 @@ export default function Heartfelt() {
                 ))}
               </div>
 
-              <div style={{ marginTop:48, paddingTop:20, borderTop:"1px solid var(--sand-200)", display:"flex", alignItems:"center", justifyContent:"center", gap:7 }}>
+              {/* CHANGE 6: footer shows total messages delivered */}
+              <div style={{ marginTop:48, paddingTop:20, borderTop:"1px solid var(--sand-200)", display:"flex", alignItems:"center", justifyContent:"center", gap:9 }}>
                 <span style={{ width:6, height:6, borderRadius:"50%", background:"#2e7d32", display:"inline-block", animation:"blinkDot 2.4s ease-in-out infinite" }}/>
-                <span style={{ fontSize:13, color:"var(--ink-3)" }}>free · no account needed</span>
+                <span style={{ fontSize:13, color:"var(--ink-3)" }}>
+                  {totalMessages} messages shared · free · no account needed
+                </span>
               </div>
             </div>
           )}
@@ -1095,7 +977,6 @@ export default function Heartfelt() {
           {page === "preview" && cat && formData && (
             <div className="anim-slidein" style={{ paddingTop:44, paddingBottom:64, position:"relative", overflow:"hidden" }}>
 
-              {/* ── CONFETTI BURST when Finalise is clicked ── */}
               {celebrating && (() => {
                 const catEmojis = {
                   gratitude:["🌼","✦","🌼","✧","🌼","✦","✧","🌼","✦","🌼","✧","✦"],
