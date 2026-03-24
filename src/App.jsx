@@ -44,7 +44,7 @@ const Styles = () => (
       border-radius: 12px; border: 1.5px solid var(--sand-200);
       background: var(--white);
       font-family: 'Lato', sans-serif; font-size: 14px; color: var(--ink);
-      outline: none; transition: border-color .18s, box-shadow .18s;
+      outline: none; transition: border-color .28s ease-out, box-shadow .28s ease-out;
     }
     .hf-input:focus { border-color: var(--sand-300); box-shadow: none; }
     .hf-input::placeholder { color: var(--ink-3); }
@@ -54,7 +54,7 @@ const Styles = () => (
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: 'Lato', sans-serif; font-weight: 500;
-      cursor: pointer; border: none; transition: all .2s ease;
+      cursor: pointer; border: none; transition: all .28s ease-out;
       border-radius: 999px; white-space: nowrap;
     }
     .btn:active:not(:disabled) { transform: scale(.97); }
@@ -116,7 +116,7 @@ const Styles = () => (
       border: 1.5px solid var(--sand-200);
       background: rgba(255,255,255,.65);
       font-family: 'Lato', sans-serif; font-size: 13px; color: var(--ink-2);
-      cursor: pointer; line-height: 1.5; transition: all .18s;
+      cursor: pointer; line-height: 1.5; transition: all .28s ease-out;
     }
     .prompt-pill:hover { background: rgba(255,255,255,.95); border-color: var(--sand-300); }
 
@@ -247,9 +247,9 @@ const Styles = () => (
     @keyframes sentBounce  { 0%{transform:scale(0) rotate(-12deg);opacity:0} 60%{transform:scale(1.18) rotate(4deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
     @keyframes confDrop { 0%{transform:translateY(-8px) rotate(0);opacity:1} 100%{transform:translateY(90px) rotate(540deg);opacity:0} }
 
-    .anim-fadeup  { animation: fadeUp  .62s ease-out both; }
-    .anim-slidein { animation: slideIn .52s ease-out both; }
-    .anim-popin   { animation: popIn   .52s cubic-bezier(.34,1.56,.64,1) both; }
+    .anim-fadeup  { animation: fadeUp  .72s ease-out both; }
+    .anim-slidein { animation: slideIn .6s ease-out both; }
+    .anim-popin   { animation: popIn   .55s cubic-bezier(.22,1,.36,1) both; }
   `}</style>
 );
 
@@ -680,11 +680,16 @@ function GratitudeWall({ wallMessages, onHome }) {
 
 // ── CATEGORY CARD ─────────────────────────────────────────────────────────────
 function CatCard({ cat, onClick }) {
-  const [hov, setHov] = useState(false);
+  const [active, setActive] = useState(false);
   return (
-    // CHANGE 4: default border uses cat.accent+"38" — colored outline always visible on mobile
-    <div className="cat-card" onClick={onClick} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
-      style={{ "--accent-color":cat.accent, borderColor:hov?cat.accent+"88":cat.accent+"38", boxShadow:hov?`0 16px 40px ${cat.accent}22`:"0 2px 8px rgba(0,0,0,.04)", display:"flex", flexDirection:"column", alignItems:"flex-start" }}>
+    // Colored border at rest (acc+"44"). Touch handlers make accent pop on tap.
+    // onMouseEnter/Leave handle desktop hover via the same active state.
+    <div className="cat-card" onClick={onClick}
+      onMouseEnter={()=>setActive(true)} onMouseLeave={()=>setActive(false)}
+      onTouchStart={()=>setActive(true)}
+      onTouchEnd={()=>setTimeout(()=>setActive(false), 180)}
+      onTouchCancel={()=>setActive(false)}
+      style={{ "--accent-color":cat.accent, borderColor:active?cat.accent+"cc":cat.accent+"44", boxShadow:active?`0 10px 32px ${cat.accent}30`:"0 2px 8px rgba(0,0,0,.04)", display:"flex", flexDirection:"column", alignItems:"flex-start", transition:"border-color .22s ease-out, box-shadow .28s ease-out" }}>
       <div className="cat-icon" style={{ width:48, height:48, borderRadius:14, background:`linear-gradient(135deg,${cat.light},${cat.accent}28)`, border:`1px solid ${cat.accent}40`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, color:cat.accent, fontWeight:700, marginBottom:14, transition:"all .22s cubic-bezier(.34,1.56,.64,1)", flexShrink:0 }}>
         {cat.glyph}
       </div>
