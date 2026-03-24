@@ -250,9 +250,8 @@ const Styles = () => (
     @keyframes floatUp     { 0%{transform:translateY(0) scale(1) rotate(0deg);opacity:1} 100%{transform:translateY(-160px) scale(.4) rotate(var(--spin,180deg));opacity:0} }
     @keyframes sentBounce  { 0%{transform:scale(0) rotate(-12deg);opacity:0} 60%{transform:scale(1.18) rotate(4deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
     @keyframes confDrop { 0%{transform:translateY(-8px) rotate(0);opacity:1} 100%{transform:translateY(90px) rotate(540deg);opacity:0} }
-@keyframes cardSeal { 0%{box-shadow:0 0 0 0 rgba(0,0,0,0)} 15%{box-shadow:0 0 22px 6px var(--seal-color)} 65%{box-shadow:0 0 22px 6px var(--seal-color)} 100%{box-shadow:0 0 0 0 rgba(0,0,0,0)} }
-@media (max-width: 700px) {
-.card-sealing { animation: cardSeal 1.9s ease-in-out both; }
+@keyframes cardFold { 0%{transform:perspective(700px) rotateX(0deg) scaleY(1);opacity:1} 35%{transform:perspective(700px) rotateX(-6deg) scaleY(.88);opacity:1} 75%{transform:perspective(700px) rotateX(-22deg) scaleY(.12);opacity:.5} 100%{transform:perspective(700px) rotateX(-28deg) scaleY(0);opacity:0} }@media (max-width: 700px) {
+.card-sealing { animation: cardFold 1.0s cubic-bezier(.4,0,.2,1) both; transform-origin: top center; }
 }
     .anim-fadeup  { animation: fadeUp  .72s ease-out both; }
     .anim-slidein { animation: slideIn .6s ease-out both; }
@@ -1020,7 +1019,7 @@ export default function Heartfelt() {
                   <h2 style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:24, color:"var(--ink)", marginBottom:6 }}>Here's your card <span style={{display:"inline-block",animation:"shimmerStar 1.8s ease-in-out infinite"}}>✦</span></h2>
                   <div style={{ fontSize:13, color:"var(--ink-3)" }}>For <strong style={{ color:"var(--ink)" }}>{formData.recipient ? formData.recipient.charAt(0).toUpperCase()+formData.recipient.slice(1) : ""}</strong></div>
                 </div>
-<div className={celebrating ? "card-sealing" : ""} style={{ "--seal-color": cat.accent+"55", borderRadius:18 }}>
+<div className={celebrating ? "card-sealing" : ""} style={{ "--fold-color": cat.accent+"55", borderRadius:18 }}>
   <PreviewCard cat={cat} to={formData.recipient} from={formData.sender} message={formData.message} bgMode={formData.bgMode} shimmerOn={formData.shimmerOn} fontId={formData.fontId} animate/>
 </div>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:26 }}>
