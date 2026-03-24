@@ -956,7 +956,7 @@ export default function Heartfelt() {
               <div className="cat-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
                 {CATS.map((c,i) => (
                   <div key={c.id} className="anim-fadeup" style={{ animationDelay:`${i*.06}s` }}>
-                    <CatCard cat={c} onClick={() => { setSelCat(c.id); setPage("compose"); }}/>
+<CatCard cat={c} onClick={() => { setSelCat(c.id); setTimeout(() => setPage("compose"), 160); }}/>
                   </div>
                 ))}
               </div>
