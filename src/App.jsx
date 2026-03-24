@@ -504,7 +504,6 @@ function AISuggest({ catId, onUse }) {
 // ── SHARE CTA ─────────────────────────────────────────────────────────────────
 function ShareCTA({ accent, recip, onHome }) {
   const [copied, setCopied] = useState(false);
-  {icon(instacopied?"✓":"📷")} {instacopied?"Copied! Paste in Instagram DM.":"Share on Instagram"}
   const link = "https://heartfelt-send.vercel.app/card?id=" + Math.random().toString(36).slice(2,9);
   const copy = () => {
     navigator.clipboard.writeText(link).catch(() => {});
