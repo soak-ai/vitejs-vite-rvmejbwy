@@ -892,6 +892,7 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
               style={{
                 width:32, height:32, borderRadius:"50%",
                 border:"1.5px solid var(--sand-200)",
+                outline:"none",
                 background:"rgba(255,255,255,.85)",
                 display:"flex", alignItems:"center", justifyContent:"center",
                 cursor:"pointer", fontSize:16, lineHeight:1,
