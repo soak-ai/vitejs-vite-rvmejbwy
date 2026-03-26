@@ -284,13 +284,148 @@ const TEMPLATES = {
 };
 
 const AI_POOL = {
-  gratitude:["Something about you always made me feel safe. I don't say that lightly.","I noticed the small things you did when no one else would.","The way you show up for people without being asked — so rare.","You've changed how I see kindness. That doesn't go away.","There are people who shift the mood of a room. You're one.","I carry something you said years ago. You probably don't remember."],
-  love:     ["With you, even ordinary Tuesdays feel worth writing home about.","Being known by you is one of the quiet honours of my life.","I didn't know love could be this quiet and still this full.","You're the reason some of my best memories exist.","Some feelings have no clean word. You're one of them.","You make me want to be more careful with people."],
-  birthday: ["Here's to the year you stop apologising for taking up space.","May this be the chapter you look back on and say — yes.","You deserve a day as good as you make everyone feel.","Another year wiser, softer, more yourself.","The world is better because you're in it.","I hope today surprises you in the best possible way."],
-  cheer:    ["On the days you can't find your footing, I'll be the ground.","Hard seasons reveal what you're made of. You're remarkable.","I'm not going anywhere. Take all the time you need.","Even your hard days show how much you care.","You're carrying more than you should. I see that.","One breath at a time. I'm right here."],
-  amends:   ["Some mistakes need more than an apology. I'm working on mine.","I keep returning to the moment I let you down.","I can't undo it. But I can show up differently.","You didn't deserve that. I'm sorry it took this long.","There's no good enough reason. But a genuine sorry.","I hope this is a beginning, not an ending."],
-  celebrate:["The gap between who you were and who you are — your doing.","Lucky to witness someone grow like this.","The version of you that doubted this is so proud right now.","You turned effort into evidence. That's everything.","This is a big deal. Let yourself feel it completely.","This achievement belongs entirely to you."],
+  gratitude:[
+    "Something about you always made me feel safe. I don't say that lightly.",
+    "I noticed the small things you did when no one else would.",
+    "The way you show up for people without being asked — so rare.",
+    "You've changed how I see kindness. That doesn't go away.",
+    "There are people who shift the mood of a room. You're one.",
+    "I carry something you said years ago. You probably don't remember.",
+    "You didn't have to, but you did. Every time.",
+    "Watching how you treat people taught me how to be better.",
+    "You made ordinary moments feel like they mattered. They did.",
+    "I think about your generosity more than you know.",
+    "The grace you carry — I've never seen anything like it.",
+    "You gave me something I didn't know I needed until I had it.",
+    "Some people leave a mark on how you see the world. You're one.",
+    "Thank you for not making me ask twice.",
+    "There's a version of my life without you in it. I'm glad that's not this one.",
+    "You showed up quietly and changed everything.",
+    "The care you put into people — it doesn't go unnoticed.",
+    "I hope you know how much light you carry.",
+    "You made me feel less alone at exactly the right time.",
+    "Grateful doesn't quite cover it. But it's where I start.",
+  ],
+  love:[
+    "With you, even ordinary Tuesdays feel worth writing home about.",
+    "Being known by you is one of the quiet honours of my life.",
+    "I didn't know love could be this quiet and still this full.",
+    "You're the reason some of my best memories exist.",
+    "Some feelings have no clean word. You're one of them.",
+    "You make me want to be more careful with people.",
+    "I didn't know I was waiting for you until you were already there.",
+    "Being loved by you is one of the best things that ever happened to me.",
+    "You make ordinary moments feel like something worth remembering.",
+    "I don't say it enough — but you are everything I didn't know I needed.",
+    "There's no version of a good day that doesn't have you somewhere in it.",
+    "You are my favourite hello and my hardest goodbye.",
+    "I feel most like myself when I'm with you.",
+    "You changed what I thought was possible to feel.",
+    "Every version of my future I can picture — you're in it.",
+    "You love quietly and completely. I don't take that lightly.",
+    "The way you look at me still catches me off guard.",
+    "Home stopped being a place the moment I met you.",
+    "You make me braver than I actually am.",
+    "I would choose you again. Without question.",
+  ],
+  birthday:[
+    "Here's to the year you stop apologising for taking up space.",
+    "May this be the chapter you look back on and say — yes.",
+    "You deserve a day as good as you make everyone feel.",
+    "Another year wiser, softer, more yourself.",
+    "The world is better because you're in it.",
+    "I hope today surprises you in the best possible way.",
+    "You were born and the world quietly got better. That's just true.",
+    "Another year of you existing — honestly, a gift to everyone who knows you.",
+    "May this one feel like the beginning of something extraordinary.",
+    "Celebrating you today and quietly glad you were born.",
+    "I hope this year gives you everything last year didn't.",
+    "You deserve softness today. And every day, honestly.",
+    "Here's to the version of you that's still becoming.",
+    "A whole year older and still the best person I know.",
+    "May this birthday mark the start of your favourite chapter yet.",
+    "You've earned every good thing coming your way.",
+    "I'm so glad you exist. Today especially.",
+    "Here's to you — fully, loudly, unapologetically.",
+    "Another year of being remarkable. Congratulations.",
+    "Today is yours. All of it.",
+  ],
+  cheer:[
+    "On the days you can't find your footing, I'll be the ground.",
+    "Hard seasons reveal what you're made of. You're remarkable.",
+    "I'm not going anywhere. Take all the time you need.",
+    "Even your hard days show how much you care.",
+    "You're carrying more than you should. I see that.",
+    "One breath at a time. I'm right here.",
+    "You are so much closer than it feels right now. Keep going.",
+    "I see what you're carrying. You don't have to carry it alone.",
+    "The version of you on the other side of this will be remarkable.",
+    "You've survived every hard day so far. This one too.",
+    "You don't have to be okay right now. I'll wait.",
+    "Your strength doesn't mean you have to carry it silently.",
+    "I believe in you on the days you can't believe in yourself.",
+    "This is hard. You are harder.",
+    "Rest if you need to. Just don't give up.",
+    "You're not behind. You're right where you need to be.",
+    "The light at the end of this — I can already see it for you.",
+    "Hard doesn't mean wrong. Keep going.",
+    "You matter more than you're letting yourself feel right now.",
+    "I'm proud of you for still showing up.",
+  ],
+  amends:[
+    "Some mistakes need more than an apology. I'm working on mine.",
+    "I keep returning to the moment I let you down.",
+    "I can't undo it. But I can show up differently.",
+    "You didn't deserve that. I'm sorry it took this long.",
+    "There's no good enough reason. But a genuine sorry.",
+    "I hope this is a beginning, not an ending.",
+    "I've thought about this more than you know. I'm sorry.",
+    "You deserved better from me, and I want to do better.",
+    "I hope there's still a way back. I'll meet you halfway.",
+    "I was wrong. I'm sorry. I want to do better.",
+    "I let pride get in the way. That was my mistake, not yours.",
+    "I should have said this sooner. I'm saying it now.",
+    "I'm not asking you to forget. Just hoping you'll let me try again.",
+    "The silence between us has cost me more than I expected.",
+    "You gave me more grace than I gave you. I'm sorry for that.",
+    "I miss you. And I know that's partly my fault.",
+    "I don't need you to understand right away. I just need you to know I'm sorry.",
+    "I handled that badly. You deserved so much better.",
+    "An apology without change means nothing. I'm working on the change.",
+    "You meant too much for me to leave this unsaid.",
+  ],
+  celebrate:[
+    "The gap between who you were and who you are — your doing.",
+    "Lucky to witness someone grow like this.",
+    "The version of you that doubted this is so proud right now.",
+    "You turned effort into evidence. That's everything.",
+    "This is a big deal. Let yourself feel it completely.",
+    "This achievement belongs entirely to you.",
+    "You worked for this. Every quiet effort, every doubt — it shows.",
+    "Look how far. Seriously — look how far.",
+    "This is not the peak. This is the view from base camp.",
+    "Every late night and early morning — this is what they were for.",
+    "You didn't just reach the goal. You became someone who could.",
+    "I always knew. Now the world gets to know too.",
+    "This is not luck. This is years of quiet effort finally visible.",
+    "You earned every single part of this.",
+    "The doubt didn't stop you. That says everything.",
+    "Here's to you — and to everything still ahead.",
+    "You made the difficult look almost easy. Almost.",
+    "This is your moment. Be in it completely.",
+    "Not just proud of what you did — proud of how you did it.",
+    "The work was invisible for a long time. Now it isn't.",
+  ],
 };
+```
+
+---
+
+**Change 2 — Replace the entire `PolishButton` function (lines 397–447)**
+
+Find:
+```
+// ── POLISH BUTTON — elevates writing, keeps meaning + voice ──────────────────
 
 const BG_OPTIONS = [
   { id:"tinted", label:"Tinted" },
@@ -394,7 +529,9 @@ function PreviewCard({ cat, to, from, message, bgMode, shimmerOn, fontId, animat
   );
 }
 
-// ── POLISH BUTTON — elevates writing, keeps meaning + voice ──────────────────
+// ── POLISH BUTTON — powered by Gemini 1.5 Flash (free tier) ──────────────────
+const GEMINI_KEY = "AIzaSyAW_EWvSGsW_QUhtZzB9ruOh2BU2MkmUeE";
+
 function PolishButton({ message, onPolished, accent }) {
   const [state, setState] = useState("idle");
 
@@ -402,20 +539,22 @@ function PolishButton({ message, onPolished, accent }) {
     if (state === "loading" || !message.trim()) return;
     setState("loading");
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({
-          model:"claude-sonnet-4-20250514",
-          max_tokens:300,
-          messages:[{
-            role:"user",
-            content:`You are helping someone write a heartfelt personal message. Take this message and make it sound more beautiful and emotionally resonant — keep the exact same meaning, the same personal voice, and the same feeling. Replace generic words with more specific, warm ones. Make it feel like it came from the heart. Do NOT add new ideas, do NOT make it longer or shorter than necessary, do NOT use clichés. Return ONLY the improved message, nothing else.\n\nOriginal message: ${message}`
-          }]
-        })
-      });
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `You are helping someone write a heartfelt personal message. Take this message and make it sound more beautiful and emotionally resonant — keep the exact same meaning, the same personal voice, and the same feeling. Replace generic words with more specific, warm ones. Make it feel like it came from the heart. Do NOT add new ideas, do NOT make it longer or shorter than necessary, do NOT use clichés. Return ONLY the improved message, nothing else.\n\nOriginal message: ${message}`
+              }]
+            }]
+          })
+        }
+      );
       const data = await res.json();
-      const polished = data?.content?.[0]?.text?.trim();
+      const polished = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
       if (polished && polished !== message) {
         onPolished(polished);
         setState("done");
