@@ -897,6 +897,7 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
                 transition:"all .18s",
                 transform: swapAnim ? "rotate(180deg) scale(1.15)" : "rotate(0deg) scale(1)",
                 color:"var(--ink-3)",
+                outline:"none",
               }}
               onMouseOver={e => { e.currentTarget.style.borderColor="var(--ink)"; e.currentTarget.style.color="var(--ink)"; e.currentTarget.style.background="#fff"; }}
               onMouseOut={e  => { e.currentTarget.style.borderColor="var(--sand-200)"; e.currentTarget.style.color="var(--ink-3)"; e.currentTarget.style.background="rgba(255,255,255,.85)"; }}
