@@ -417,15 +417,6 @@ const AI_POOL = {
     "The work was invisible for a long time. Now it isn't.",
   ],
 };
-```
-
----
-
-**Change 2 — Replace the entire `PolishButton` function (lines 397–447)**
-
-Find:
-```
-// ── POLISH BUTTON — elevates writing, keeps meaning + voice ──────────────────
 
 const BG_OPTIONS = [
   { id:"tinted", label:"Tinted" },
