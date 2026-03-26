@@ -63,6 +63,7 @@ const Styles = () => (
     }
     .btn:active:not(:disabled) { transform: scale(.97); }
     .btn:disabled { opacity: .45; cursor: not-allowed; }
+    button:focus { outline: none; } button:focus-visible { outline: none; }
 
     .btn-primary {
       padding: 11px 24px; font-size: 14px;
