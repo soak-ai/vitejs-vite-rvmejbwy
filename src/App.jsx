@@ -539,7 +539,7 @@ function PolishButton({ message, onPolished, accent }) {
           body: JSON.stringify({
             contents: [{
               parts: [{
-                text: `You are helping someone write a heartfelt personal message. Take this message and make it sound more beautiful and emotionally resonant — keep the exact same meaning, the same personal voice, and the same feeling. Replace generic words with more specific, warm ones. Make it feel like it came from the heart. Do NOT add new ideas, do NOT make it longer or shorter than necessary, do NOT use clichés. Return ONLY the improved message, nothing else.\n\nOriginal message: ${message}`
+                text: "Fix all grammar, capitalisation and spelling errors. Then make this message sound more warm, beautiful and heartfelt — improve the flow, replace generic words with more specific ones, make it feel more human and emotionally resonant. Keep the same meaning and voice. Return ONLY the improved message, nothing else.\n\nOriginal: " + message
               }]
             }]
           })
@@ -547,12 +547,12 @@ function PolishButton({ message, onPolished, accent }) {
       );
       const data = await res.json();
       const polished = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-      if (polished && polished !== message) {
+      if (polished) {
         onPolished(polished);
         setState("done");
         setTimeout(() => setState("idle"), 2500);
       } else {
-        setState("done");
+        setState("error");
         setTimeout(() => setState("idle"), 2000);
       }
     } catch {
