@@ -924,11 +924,7 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
               <span style={{ fontSize:12, color:message.length>230?"#c0392b":"var(--ink-3)" }}>{message.length}/250</span>
             </div>
             <textarea value={message} onChange={e=>{ if(e.target.value.length<=250) setMessage(e.target.value); }} placeholder="Write from the heart. Don't overthink it." rows={4} {...inp("msg")}/>
-            {message.trim().length > 8 && (
-              <div style={{ display:"flex", justifyContent:"center", marginTop:4 }}>
-                <PolishButton message={message} onPolished={setMessage} accent={cat.accent}/>
-              </div>
-            )}
+           
           </div>
 
 <div style={{ marginTop:4 }}>
