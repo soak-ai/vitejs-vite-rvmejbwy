@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your heartfelt card</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Sacramento&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#fef9f4;font-family:'Lato',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+  .card{max-width:420px;width:100%;border-radius:20px;padding:32px 28px 28px;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.10);}
+  .card-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px;font-family:'Lato',sans-serif;opacity:.7;}
+  .card-to{font-size:16px;color:#4a3728;font-family:'Lato',sans-serif;margin-bottom:16px;}
+  .card-msg{font-size:16px;color:#18120e;line-height:1.85;font-style:italic;margin-bottom:20px;font-family:'Lora',serif;}
+  .card-from{font-size:13px;color:#4a3728;font-family:'Lato',sans-serif;display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(0,0,0,.07);}
+  .card-logo{font-size:9px;opacity:.4;letter-spacing:.1em;}
+  .pattern{position:absolute;inset:0;border-radius:20px;opacity:.5;pointer-events:none;}
+  .inner{position:relative;z-index:2;}
+  .cta{margin-top:28px;text-align:center;}
+  .cta a{display:inline-block;padding:12px 28px;border-radius:999px;background:#18120e;color:#fff;text-decoration:none;font-family:'Lato',sans-serif;font-size:14px;font-weight:500;}
+  .cta p{font-size:12px;color:#7a6050;margin-top:10px;font-family:'Lato',sans-serif;}
+  .loading{text-align:center;color:#7a6050;font-size:14px;font-family:'Lato',sans-serif;}
+  .error{text-align:center;color:#c0392b;font-size:14px;font-family:'Lato',sans-serif;max-width:320px;}
+</style>
+</head>
+<body>
+<div id="root"><p class="loading">Loading your card…</p></div>
+<script>
+const SUPA_URL = "https://kazfdohlmupbkfyliovs.supabase.co";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImthemZkb2hsbXVwYmtmeWxpb3ZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNTY5MjAsImV4cCI6MjA4OTkzMjkyMH0.flbkl6d8GGfSmoIfvmxZPPQsusXrJ_D9uxD3Wsqj-XA";
+
+const CATS = {
+  gratitude:{accent:"#d97706",light:"#fffbeb",label:"Gratitude",glyph:"🙏"},
+  love:     {accent:"#c2185b",light:"#fce4ec",label:"Love",glyph:"❤️"},
+  birthday: {accent:"#7b1fa2",light:"#f3e5f5",label:"Birthday",glyph:"🎂"},
+  cheer:    {accent:"#1565c0",light:"#e3f2fd",label:"Cheer Up",glyph:"☀️"},
+  amends:   {accent:"#2e7d32",light:"#e8f5e9",label:"Make Amends",glyph:"🤝"},
+  celebrate:{accent:"#e65100",light:"#fff3e0",label:"Celebrate",glyph:"🏆"},
+};
+
+const id = new URLSearchParams(window.location.search).get("id");
+
+async function load() {
+  if (!id) { showError("No card ID found in this link."); return; }
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/cards?id=eq.${id}&select=*`, {
+      headers:{ apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` }
+    });
+    const data = await res.json();
+    if (!data || data.length === 0) { showError("This card couldn't be found. It may have been removed."); return; }
+    render(data[0]);
+  } catch(e) {
+    showError("Something went wrong loading this card.");
+  }
+}
+
+function render(card) {
+  const cat = CATS[card.cat] || CATS.gratitude;
+  const bg = card.bg_mode === "white" ? "#ffffff" : card.bg_mode === "warm" ? "#fffbf4" : cat.light;
+  const fontStyle = card.font_id === "sacramento"
+    ? "font-family:'Sacramento',cursive;font-size:22px;line-height:1.7;"
+    : card.font_id === "warm"
+    ? "font-family:'Lora',serif;font-style:italic;"
+    : "font-family:'Lato',sans-serif;";
+
+  document.getElementById("root").innerHTML = `
+    <div class="card" style="background:${bg};border:1px solid ${cat.accent}28;">
+      <div class="pattern" style="background-image:none;"></div>
+      <div class="inner">
+        <div class="card-label" style="color:${cat.accent}">${cat.glyph} ${cat.label} · heartfelt</div>
+        <div class="card-to" style="margin-top:8px;">Dear ${esc(card.recipient)},</div>
+        <div class="card-msg" style="${fontStyle}">${esc(card.message)}</div>
+        <div class="card-from">
+          <span>with warmth, <strong style="color:#18120e">${esc(card.sender)}</strong></span>
+          <span class="card-logo" style="color:${cat.accent}">heartfelt ◇</span>
+        </div>
+      </div>
+    </div>
+    <div class="cta">
+      <a href="https://heartfelt-send.vercel.app">Send someone a card →</a>
+      <p>free · no account needed</p>
+    </div>
+  `;
+}
+
+function esc(str) {
+  return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function showError(msg) {
+  document.getElementById("root").innerHTML = `<p class="error">${msg}</p>`;
+}
+
+load();
+</script>
+</body>
+</html>
