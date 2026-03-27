@@ -522,8 +522,7 @@ function PreviewCard({ cat, to, from, message, bgMode, shimmerOn, fontId, animat
 }
 
 // ── POLISH BUTTON — powered by Gemini 1.5 Flash (free tier) ──────────────────
-const GEMINI_KEY = "AIzaSyAW_EWvSGsW_QUhtZzB9ruOh2BU2MkmUeE";
-
+const GEMINI_KEY = "AIzaSyBQ7oPUmMrmh7Rg2hTcHtlt1yqgbzR7OOg";
 function PolishButton({ message, onPolished, accent }) {
   const [state, setState] = useState("idle");
 
@@ -532,7 +531,8 @@ function PolishButton({ message, onPolished, accent }) {
     setState("loading");
     try {
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_KEY}`,
+
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
