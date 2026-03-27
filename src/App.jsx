@@ -522,7 +522,7 @@ function PreviewCard({ cat, to, from, message, bgMode, shimmerOn, fontId, animat
 }
 
 // ── POLISH BUTTON — powered by Gemini 1.5 Flash (free tier) ──────────────────
-const GEMINI_KEY = "AIzaSyBQ7oPUmMrmh7Rg2hTcHtlt1yqgbzR7OOg";
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_KEY;
 function PolishButton({ message, onPolished, accent }) {
   const [state, setState] = useState("idle");
 
