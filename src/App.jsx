@@ -1028,8 +1028,22 @@ export default function Heartfelt() {
     }).catch(() => setTotalMessages(WALL_SEED.length + wallMessages.length));
   }, []);
 
-  const cat = CATS.find(c => c.id === selCat);
-  const goHome = () => { setPage("home"); setSelCat(null); setFormData(null); setCelebrating(false); };
+const cat = CATS.find(c => c.id === selCat);
+const goHome = () => { setPage("home"); setSelCat(null); setFormData(null); setCelebrating(false); };
+
+// Card viewer — reads ?id= from URL and shows the card
+const [viewCard, setViewCard] = useState(null);
+const [viewLoading, setViewLoading] = useState(false);
+
+useEffect(() => {
+  const id = new URLSearchParams(window.location.search).get("id");
+  if (!id) return;
+  setViewLoading(true);
+  fetch(`${SUPA_URL}/rest/v1/cards?id=eq.${id}&select=*`, { headers: supa.headers })
+    .then(r => r.json())
+    .then(data => { if (data?.[0]) setViewCard(data[0]); setViewLoading(false); })
+    .catch(() => setViewLoading(false));
+}, []);
 
   const handleSend = async () => {
     if (formData) {
@@ -1064,10 +1078,35 @@ export default function Heartfelt() {
 
   // totalMessages: WALL_SEED is social proof baseline; real user cards add on top
 
+  // Show card viewer if URL has ?id=
+if (viewLoading) return (<><Styles/><div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Lato',sans-serif", color:"var(--ink-3)", background:"var(--sand-50)" }}>💌 Opening your card…</div></>);
+
+if (viewCard) {
+  const vc = CATS.find(c => c.id === viewCard.cat) || CATS[0];
   return (
     <>
       <Styles/>
-      <FloatingBg/>
+      <div style={{ minHeight:"100vh", background:"var(--sand-50)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"40px 24px" }}>
+        <div style={{ fontSize:11, letterSpacing:".18em", color:"var(--ink-3)", textTransform:"uppercase", marginBottom:24 }}>heartfelt · a card for you</div>
+        <div style={{ width:"100%", maxWidth:400 }}>
+          <PreviewCard cat={vc} to={viewCard.recipient} from={viewCard.sender} message={viewCard.message} bgMode={viewCard.bg_mode} shimmerOn={viewCard.shimmer_on} fontId={viewCard.font_id} animate/>
+        </div>
+        <div style={{ marginTop:32, textAlign:"center" }}>
+          <p style={{ fontSize:13, color:"var(--ink-3)", marginBottom:16, fontFamily:"'Lora',serif", fontStyle:"italic" }}>Want to send one back?</p>
+          <button onClick={() => window.location.href="https://heartfelt-send.vercel.app"}
+            style={{ padding:"10px 24px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato',sans-serif", fontSize:13, cursor:"pointer" }}>
+            Send a heartfelt card ✦
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+return (
+  <>
+    <Styles/>
+    <FloatingBg/>
 
       {/* ── NAV ── */}
       <nav style={{ position:"sticky", top:0, zIndex:20, background:"rgba(253,250,246,.94)", backdropFilter:"blur(18px)", borderBottom:"1px solid var(--sand-200)", height:58 }}>
