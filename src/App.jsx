@@ -632,12 +632,13 @@ function AISuggest({ catId, onUse }) {
 }
 
 // ── SHARE CTA ─────────────────────────────────────────────────────────────────
-function ShareCTA({ accent, recip, onHome }) {
+function ShareCTA({ accent, recip, cardId, onHome }) {
 const [copied, setCopied] = useState(false);
   const [instacopied, setInstacopied] = useState(false);
-  const link = "https://heartfelt-send.vercel.app/card?id=" + Math.random().toString(36).slice(2,9);
+  const link = "https://heartfelt-send.vercel.app/?id=" + (cardId || "");
+  const waText = "Someone made something just for you 💛 " + link;
   const copy = () => {
-    navigator.clipboard.writeText(link).catch(() => {});
+    navigator.clipboard.writeText(waText).catch(() => {});
     setCopied(true); setTimeout(() => setCopied(false), 2500);
   };
 
@@ -653,7 +654,7 @@ const [copied, setCopied] = useState(false);
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:9, width:"100%" }}>
       <button style={{ ...shareBtn, color:"#1a7a42", border:"1.5px solid #a8dbb8" }}
-        onClick={() => window.open("https://wa.me/?text="+encodeURIComponent("I made something for you 💛 "+link),"_blank")}
+        onClick={() => window.open("https://wa.me/?text="+encodeURIComponent(waText),"_blank")}
         onMouseOver={e=>{ e.currentTarget.style.background="#e6f7ed"; e.currentTarget.style.borderColor="transparent"; }}
         onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.borderColor="#a8dbb8"; }}>
         {icon("💬")} Send via WhatsApp
@@ -685,7 +686,7 @@ const [copied, setCopied] = useState(false);
 }
 
 // ── SENT PAGE ─────────────────────────────────────────────────────────────────
-function SentPage({ cat, formData, onHome, onViewWall }) {
+function SentPage({ cat, formData, cardId, onHome, onViewWall }) {
   const [burst, setBurst] = useState(false);
   const recip = formData?.recipient ? formData.recipient.charAt(0).toUpperCase()+formData.recipient.slice(1) : "";
 
@@ -723,7 +724,7 @@ function SentPage({ cat, formData, onHome, onViewWall }) {
         Pick how you want to share it with <strong style={{ color:"var(--ink)" }}>{recip}</strong>.
       </p>
       <p style={{ fontSize:12, color:cat.accent, marginBottom:24, letterSpacing:".04em" }}>✦ Pinned to the Gratitude Wall anonymously</p>
-      <ShareCTA accent={cat.accent} recip={recip} onHome={onHome}/>
+      <ShareCTA accent={cat.accent} recip={recip} cardId={cardId} onHome={onHome}/>
     </div>
   );
 }
@@ -1000,6 +1001,7 @@ export default function Heartfelt() {
   const [formData,     setFormData]     = useState(null);
   const [celebrating,  setCelebrating]  = useState(false);
   const [totalMessages, setTotalMessages] = useState(0);
+  const [sharedCardId, setSharedCardId] = useState(null);
 
   const [wallMessages, setWallMessages] = useState(() => {
     try {
@@ -1032,21 +1034,23 @@ export default function Heartfelt() {
   const handleSend = async () => {
     if (formData) {
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-      // Save to Supabase
-      fetch(`${SUPA_URL}/rest/v1/cards`, {
-        method: "POST",
-        headers: { ...supa.headers, "Prefer": "return=minimal" },
-        body: JSON.stringify({
-          id, cat: cat.id,
-          message: formData.message,
-          recipient: formData.recipient,
-          sender: formData.sender,
-          bg_mode: formData.bgMode,
-          font_id: formData.fontId,
-          shimmer_on: formData.shimmerOn,
-        })
-      }).then(() => setTotalMessages(t => t + 1)).catch(() => {});
-      // Also keep local wall
+      setSharedCardId(id);
+      try {
+        await fetch(`${SUPA_URL}/rest/v1/cards`, {
+          method: "POST",
+          headers: { ...supa.headers, "Prefer": "return=minimal" },
+          body: JSON.stringify({
+            id, cat: cat.id,
+            message: formData.message,
+            recipient: formData.recipient,
+            sender: formData.sender,
+            bg_mode: formData.bgMode,
+            font_id: formData.fontId,
+            shimmer_on: formData.shimmerOn,
+          })
+        });
+        setTotalMessages(t => t + 1);
+      } catch(e) { console.error("Save failed", e); }
       setWallMessages(prev => [{
         id: Date.now(), cat: cat.id,
         message: formData.message,
@@ -1193,7 +1197,7 @@ export default function Heartfelt() {
           )}
 
           {page === "sent" && cat && (
-            <SentPage cat={cat} formData={formData} onHome={goHome} onViewWall={()=>{goHome();setPage("wall");}}/>
+            <SentPage cat={cat} formData={formData} cardId={sharedCardId} onHome={goHome} onViewWall={()=>{goHome();setPage("wall");}}/>
           )}
         </>}
       </div>
