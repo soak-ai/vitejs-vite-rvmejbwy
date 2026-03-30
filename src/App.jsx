@@ -736,7 +736,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
 
   useEffect(() => {
     if (!hasEverSent) return; // only load wall after user has sent a card
-    fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=50`, {
+    fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=99`, {
       headers: supa.headers
     })
     .then(r => r.json())
@@ -816,7 +816,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
           {allCards.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
-            const isNew = !!item.isNew && (Date.now() - item.id) < 10*60*1000;
+          const isNew = item.isNew || (item.created_at && (Date.now() - new Date(item.created_at).getTime()) < 10*60*1000);
             return (
               <div key={item.id} className={`masonry-item sticky-${mod} sticky-note`}
                 style={{ background:item.color, borderRadius:16, padding:24,
@@ -826,7 +826,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
                   position:"relative", cursor:"default", userSelect:"none" }}>
                 {isNew && (
                   <div style={{ marginBottom:8 }}>
-                    <span style={{ fontSize:10, background:cat?.accent||"#888", color:"#fff", borderRadius:999, padding:"2px 10px", fontFamily:"'Lato', sans-serif", fontWeight:500, letterSpacing:".04em", display:"inline-block" }}>just now</span>
+                    <span style={{ fontSize:10, background:cat?.accent||"#888", color:"#fff", borderRadius:999, padding:"2px 10px", fontFamily:"'Lato', sans-serif", fontWeight:500, letterSpacing:".04em", display:"flex" }}>just now</span>
                   </div>
                 )}
                 <div style={{ fontSize:11, letterSpacing:".12em", textTransform:"uppercase", color:cat?.accent, marginBottom:12, fontFamily:"'Lato', sans-serif" }}>
