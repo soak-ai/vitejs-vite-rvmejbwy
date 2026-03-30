@@ -1018,6 +1018,50 @@ function ComposeStep({ cat, onPreview, onBack, draft }) {
 }
 
 // ── MAIN APP ──────────────────────────────────────────────────────────────────
+function CardViewerScene({ vc, viewCard }) {
+  const [opened, setOpened] = useState(false);
+  const [showCard, setShowCard] = useState(false);
+  const [showCTA, setShowCTA] = useState(false);
+
+  const open = () => {
+    if (opened) return;
+    setOpened(true);
+    setTimeout(() => { setShowCard(true); }, 600);
+    setTimeout(() => { setShowCTA(true); }, 1100);
+  };
+
+  return (
+    <div style={{ minHeight:"100vh", background:"var(--sand-50)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"40px 24px" }}>
+      <div style={{ fontSize:11, letterSpacing:".18em", color:"var(--ink-3)", textTransform:"uppercase", marginBottom:32 }}>heartfelt · a card for you</div>
+
+      {/* envelope */}
+      {!opened && (
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:12 }} onClick={open}>
+          <span className="vc-envelope" style={{ fontSize:72, lineHeight:1, display:"block" }}>💌</span>
+          <span style={{ fontSize:13, color:"var(--ink-3)", fontFamily:"'Lora',serif", fontStyle:"italic" }}>tap to open</span>
+        </div>
+      )}
+
+      {/* card */}
+      {showCard && (
+        <div style={{ width:"100%", maxWidth:400, animation:"cardReveal .55s ease both" }}>
+          <PreviewCard cat={vc} to={viewCard.recipient} from={viewCard.sender} message={viewCard.message} bgMode={viewCard.bg_mode} shimmerOn={viewCard.shimmer_on} fontId={viewCard.font_id} animate/>
+        </div>
+      )}
+
+      {/* CTA */}
+      {showCTA && (
+        <div style={{ marginTop:28, textAlign:"center", animation:"cardReveal .5s ease both" }}>
+          <p style={{ fontSize:13, color:"var(--ink-3)", marginBottom:16, fontFamily:"'Lora',serif", fontStyle:"italic" }}>Want to send one back?</p>
+          <button onClick={() => window.location.href="https://heartfelt-send.vercel.app"}
+            style={{ padding:"10px 24px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato',sans-serif", fontSize:13, cursor:"pointer" }}>
+            Send a heartfelt card ✦
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 export default function Heartfelt() {
   const [page,         setPage]         = useState("home");
   const [selCat,       setSelCat]       = useState(null);
@@ -1115,19 +1159,35 @@ if (viewCard) {
   return (
     <>
       <Styles/>
-      <div style={{ minHeight:"100vh", background:"var(--sand-50)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"40px 24px" }}>
-        <div style={{ fontSize:11, letterSpacing:".18em", color:"var(--ink-3)", textTransform:"uppercase", marginBottom:24 }}>heartfelt · a card for you</div>
-        <div style={{ width:"100%", maxWidth:400 }}>
-          <PreviewCard cat={vc} to={viewCard.recipient} from={viewCard.sender} message={viewCard.message} bgMode={viewCard.bg_mode} shimmerOn={viewCard.shimmer_on} fontId={viewCard.font_id} animate/>
-        </div>
-        <div style={{ marginTop:32, textAlign:"center" }}>
-          <p style={{ fontSize:13, color:"var(--ink-3)", marginBottom:16, fontFamily:"'Lora',serif", fontStyle:"italic" }}>Want to send one back?</p>
-          <button onClick={() => window.location.href="https://heartfelt-send.vercel.app"}
-            style={{ padding:"10px 24px", borderRadius:999, border:"none", background:"var(--ink)", color:"#fff", fontFamily:"'Lato',sans-serif", fontSize:13, cursor:"pointer" }}>
-            Send a heartfelt card ✦
-          </button>
-        </div>
-      </div>
+      <style>{`
+        @keyframes gentleShake {
+          0%,100%{transform:rotate(0deg)}
+          20%{transform:rotate(-5deg)}
+          40%{transform:rotate(5deg)}
+          60%{transform:rotate(-3deg)}
+          80%{transform:rotate(3deg)}
+        }
+        @keyframes tapShake {
+          0%,100%{transform:rotate(0deg) scale(1)}
+          15%{transform:rotate(-8deg) scale(1.1)}
+          30%{transform:rotate(8deg) scale(1.1)}
+          45%{transform:rotate(-5deg) scale(1.05)}
+          60%{transform:rotate(5deg) scale(1.05)}
+          80%{transform:rotate(-2deg)}
+        }
+        @keyframes cardReveal {
+          from{opacity:0;transform:translateY(18px)}
+          to{opacity:1;transform:translateY(0)}
+        }
+        @keyframes vcBurst {
+          0%{transform:translate(var(--bx),var(--by)) scale(0);opacity:1}
+          60%{opacity:1}
+          100%{transform:translate(calc(var(--bx)*3.2),calc(var(--by)*3.2)) scale(1);opacity:0}
+        }
+        .vc-envelope { animation: gentleShake 2.4s ease-in-out infinite; cursor:pointer; transition: opacity .3s ease, transform .3s ease; transform-origin: center bottom; }
+        .vc-envelope:hover { animation: tapShake .5s ease; }
+      `}</style>
+      <CardViewerScene vc={vc} viewCard={viewCard}/>
     </>
   );
 }
