@@ -632,11 +632,12 @@ function AISuggest({ catId, onUse }) {
 }
 
 // ── SHARE CTA ─────────────────────────────────────────────────────────────────
-function ShareCTA({ accent, recip, cardId, onHome }) {
+function ShareCTA({ accent, recip, sender, cardId, onHome }) {
 const [copied, setCopied] = useState(false);
   const [instacopied, setInstacopied] = useState(false);
   const link = "https://heartfelt-send.vercel.app/?id=" + (cardId || "");
-  const waText = "Someone made something just for you 💛 " + link;
+  const senderName = recip ? recip : "Someone";
+  const waText = (recip ? recip : "Someone") + " made something just for you 💛 " + link;
   const copy = () => {
     navigator.clipboard.writeText(waText).catch(() => {});
     setCopied(true); setTimeout(() => setCopied(false), 2500);
@@ -724,15 +725,38 @@ function SentPage({ cat, formData, cardId, onHome, onViewWall }) {
         Pick how you want to share it with <strong style={{ color:"var(--ink)" }}>{recip}</strong>.
       </p>
       <p style={{ fontSize:12, color:cat.accent, marginBottom:24, letterSpacing:".04em" }}>✦ Pinned to the Gratitude Wall anonymously</p>
-      <ShareCTA accent={cat.accent} recip={recip} cardId={cardId} onHome={onHome}/>
+      <ShareCTA accent={cat.accent} recip={recip} sender={formData?.sender} cardId={cardId} onHome={onHome}/>
     </div>
   );
 }
 
 // ── GRATITUDE WALL — empty state from App_perfect_gw_empty_state_49_ ─────────
-function GratitudeWall({ wallMessages, onHome }) {
+function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
   const getCat = id => CATS.find(c => c.id === id);
-  const isEmpty = wallMessages.length === 0;
+  const [supaCards, setSupaCards] = useState([]);
+
+  useEffect(() => {
+    if (!hasEverSent) return; // only load wall after user has sent a card
+    fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=50`, {
+      headers: supa.headers
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (Array.isArray(data)) {
+        setSupaCards(data.map(c => ({
+          id: c.id,
+          cat: c.cat,
+          message: c.message,
+          color: CATS.find(x => x.id === c.cat)?.light || "#f7f1e8",
+          accent: CATS.find(x => x.id === c.cat)?.accent || "#888",
+        })));
+      }
+    })
+    .catch(() => {});
+  }, [hasEverSent]);
+
+  const allCards = hasEverSent ? supaCards : [];
+  const isEmpty = !hasEverSent;
 
   return (
     <div className="anim-fadeup" style={{ maxWidth:1080, margin:"0 auto", padding:"56px 24px 80px" }}>
@@ -1002,6 +1026,9 @@ export default function Heartfelt() {
   const [celebrating,  setCelebrating]  = useState(false);
   const [totalMessages, setTotalMessages] = useState(0);
   const [sharedCardId, setSharedCardId] = useState(null);
+  const [hasEverSent, setHasEverSent] = useState(() => {
+  try { return localStorage.getItem('hf_ever_sent') === 'true'; } catch { return false; }
+});
 
   const [wallMessages, setWallMessages] = useState(() => {
     try {
@@ -1046,9 +1073,13 @@ useEffect(() => {
 }, []);
 
   const handleSend = async () => {
+    if (celebrating) return; // prevent double press
+    setCelebrating(true); // disable immediately
     if (formData) {
       const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
       setSharedCardId(id);
+      setHasEverSent(true);
+      try { localStorage.setItem('hf_ever_sent', 'true'); } catch {}
       try {
         await fetch(`${SUPA_URL}/rest/v1/cards`, {
           method: "POST",
@@ -1072,7 +1103,6 @@ useEffect(() => {
         isNew: true, timeLabel: "just now",
       }, ...prev]);
     }
-    setCelebrating(true);
     setTimeout(() => { setCelebrating(false); setPage("sent"); }, 1800);
   };
 
@@ -1143,8 +1173,8 @@ return (
 
       <div style={{ position:"relative", zIndex:1 }}>
 
-        {page === "wall" && <GratitudeWall wallMessages={wallMessages} onHome={goHome}/>}
-
+        {page === "wall" && <GratitudeWall wallMessages={wallMessages} hasEverSent={hasEverSent} onHome={goHome}/>}
+        
         {page !== "wall" && <>
 
           {/* HOME */}
