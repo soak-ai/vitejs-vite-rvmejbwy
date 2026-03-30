@@ -636,8 +636,7 @@ function ShareCTA({ accent, recip, sender, cardId, onHome }) {
 const [copied, setCopied] = useState(false);
   const [instacopied, setInstacopied] = useState(false);
   const link = "https://heartfelt-send.vercel.app/?id=" + (cardId || "");
-  const senderName = recip ? recip : "Someone";
-  const waText = (recip ? recip : "Someone") + " made something just for you 💛 " + link;
+  const waText = "Someone made something just for you 💛 " + link;
   const copy = () => {
     navigator.clipboard.writeText(waText).catch(() => {});
     setCopied(true); setTimeout(() => setCopied(false), 2500);
@@ -814,7 +813,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
       {/* ── CARDS — real user cards only, flat grid ── */}
       {!isEmpty && (
         <div className="masonry-grid" style={{ alignItems:"stretch" }}>
-          {wallMessages.slice(0, 99).map((item, i) => {
+          {allCards.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
             const isNew = !!item.isNew && (Date.now() - item.id) < 10*60*1000;
