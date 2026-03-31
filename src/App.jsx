@@ -1026,8 +1026,8 @@ function CardViewerScene({ vc, viewCard }) {
   const open = () => {
     if (opened) return;
     setOpened(true);
-    setTimeout(() => { setShowCard(true); }, 600);
-    setTimeout(() => { setShowCTA(true); }, 1100);
+    setTimeout(() => { setShowCard(true); }, 900);
+    setTimeout(() => { setShowCTA(true); }, 1600);
   };
 
   return (
