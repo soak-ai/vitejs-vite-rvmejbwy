@@ -172,7 +172,7 @@ const Styles = () => (
     }
 
     /* ── GRATITUDE WALL (App 3 exact — UNTOUCHED) ── */
-    .masonry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+    .masonry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; grid-auto-rows: auto; }
     .masonry-item { align-self: start; }
     .sticky-0 { --r: -2deg; }   .sticky-1 { --r: 1.5deg; }
     .sticky-2 { --r: -1deg; }   .sticky-3 { --r: 2.5deg; }
@@ -735,8 +735,9 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
   const [supaCards, setSupaCards] = useState([]);
 
   useEffect(() => {
-    if (!hasEverSent) return; // only load wall after user has sent a card
-    fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=99`, {
+    if (!hasEverSent) return;
+    // fetch runs fine — but we need a re-fetch when wall opens
+    fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=99&_t=${Date.now()}`, {
       headers: supa.headers
     })
     .then(r => r.json())
@@ -752,7 +753,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
       }
     })
     .catch(() => {});
-  }, [hasEverSent]);
+  }, [hasEverSent, supaCards.length === 0]);
 
   const allCards = supaCards;
   const isEmpty = !hasEverSent;
@@ -812,7 +813,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
 
       {/* ── CARDS — real user cards only, flat grid ── */}
       {!isEmpty && (
-        <div className="masonry-grid" style={{ alignItems:"start" }}>
+        <div className="masonry-grid" style={{ alignItems:"start" gridAutoRows:"auto" }}>
           {allCards.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
