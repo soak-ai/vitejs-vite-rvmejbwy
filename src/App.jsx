@@ -735,8 +735,6 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
   const [supaCards, setSupaCards] = useState([]);
 
   useEffect(() => {
-    if (!hasEverSent) return;
-    // fetch runs fine — but we need a re-fetch when wall opens
     fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=99&_t=${Date.now()}`, {
       headers: supa.headers
     })
