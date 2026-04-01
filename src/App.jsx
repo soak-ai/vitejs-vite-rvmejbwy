@@ -173,7 +173,7 @@ const Styles = () => (
 
     /* ── GRATITUDE WALL (App 3 exact — UNTOUCHED) ── */
     .masonry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
-    .masonry-item { }
+    .masonry-item { align-self: start; }
     .sticky-0 { --r: -2deg; }   .sticky-1 { --r: 1.5deg; }
     .sticky-2 { --r: -1deg; }   .sticky-3 { --r: 2.5deg; }
     .sticky-4 { --r: -1.5deg; } .sticky-5 { --r: 1deg; }
@@ -754,7 +754,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
     .catch(() => {});
   }, [hasEverSent]);
 
-  const allCards = hasEverSent ? supaCards : [];
+  const allCards = supaCards;
   const isEmpty = !hasEverSent;
 
   return (
@@ -812,7 +812,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
 
       {/* ── CARDS — real user cards only, flat grid ── */}
       {!isEmpty && (
-        <div className="masonry-grid" style={{ alignItems:"stretch" }}>
+        <div className="masonry-grid" style={{ alignItems:"start" }}>
           {allCards.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
@@ -1146,7 +1146,7 @@ useEffect(() => {
         isNew: true, timeLabel: "just now",
       }, ...prev]);
     }
-    setTimeout(() => { setCelebrating(false); setPage("sent"); }, 1800);
+    setTimeout(() => { setCelebrating(false); setPage("sent"); }, 900);
   };
 
   // totalMessages: WALL_SEED is social proof baseline; real user cards add on top
