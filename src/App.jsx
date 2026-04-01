@@ -753,7 +753,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
       }
     })
     .catch(() => {});
-  }, [hasEverSent, supaCards.length === 0]);
+  }, [hasEverSent]);
 
   const allCards = supaCards;
   const isEmpty = !hasEverSent;
@@ -772,47 +772,37 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
         </p>
       </div>
 
-      {/* ── EMPTY STATE ── */}
-      {isEmpty && (
-        <div style={{ maxWidth:520, margin:"0 auto", textAlign:"center" }}>
-          <div style={{ fontSize:48, marginBottom:20, lineHeight:1 }}>💌</div>
+      <div style={{ textAlign:"center", marginBottom:32 }}>
+  <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginBottom:20 }}>
+    {[
+      { icon:"🙏", text:"Thank someone" },
+      { icon:"❤️", text:"Say you care" },
+      { icon:"✦",  text:"Celebrate them" },
+    ].map(({ icon, text }) => (
+      <div key={text} style={{ display:"flex", alignItems:"center", gap:5, padding:"6px 14px", borderRadius:999, border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.7)", fontFamily:"'Lato', sans-serif", fontSize:12, color:"var(--ink-3)" }}>
+        <span style={{ fontSize:12 }}>{icon}</span> {text}
+      </div>
+    ))}
+  </div>
+  <button onClick={onHome}
+    style={{ padding:"9px 22px", borderRadius:999, border:"1.5px solid var(--ink)", background:"transparent", color:"var(--ink)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7, transition:"background .18s, color .18s" }}
+    onMouseOver={e=>{ e.currentTarget.style.background="var(--ink)"; e.currentTarget.style.color="#fff"; }}
+    onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.color="var(--ink)"; }}>
+    Send a card
+    <span style={{ display:"inline-block", animation:"arrowPulse 1.4s ease-in-out infinite" }}>→</span>
+  </button>
+</div>
 
-          <h2 style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:"clamp(18px,3vw,24px)", color:"var(--ink)", marginBottom:10, lineHeight:1.3 }}>
-            Be the first to bond.
-          </h2>
-
-          <p style={{ fontSize:14, color:"var(--ink-3)", lineHeight:1.7, marginBottom:24, maxWidth:340, margin:"0 auto 24px" }}>
-            Say the thing you've been holding back.
-          </p>
-
-          <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginBottom:28 }}>
-            {[
-              { icon:"🙏", text:"Thank someone" },
-              { icon:"❤️", text:"Say you care" },
-              { icon:"✦",  text:"Celebrate them" },
-            ].map(({ icon, text }) => (
-              <div key={text} style={{ display:"flex", alignItems:"center", gap:5, padding:"6px 14px", borderRadius:999, border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.7)", fontFamily:"'Lato', sans-serif", fontSize:12, color:"var(--ink-3)" }}>
-                <span style={{ fontSize:12 }}>{icon}</span> {text}
-              </div>
-            ))}
-          </div>
-
-          <button onClick={onHome}
-            style={{ padding:"9px 22px", borderRadius:999, border:"1.5px solid var(--ink)", background:"transparent", color:"var(--ink)", fontFamily:"'Lato', sans-serif", fontSize:13, fontWeight:500, cursor:"pointer", display:"inline-flex", alignItems:"center", gap:7, transition:"background .18s, color .18s" }}
-            onMouseOver={e=>{ e.currentTarget.style.background="var(--ink)"; e.currentTarget.style.color="#fff"; }}
-            onMouseOut={e=> { e.currentTarget.style.background="transparent"; e.currentTarget.style.color="var(--ink)"; }}>
-            Send a card
-            <span style={{ display:"inline-block", animation:"arrowPulse 1.4s ease-in-out infinite" }}>→</span>
-          </button>
-
-          <p style={{ fontSize:11, color:"var(--ink-3)", marginTop:14, fontStyle:"italic", opacity:.65 }}>
-            Anonymous · no account needed
-          </p>
-        </div>
-      )}
+{supaCards.length > 0 && (
+  <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:28 }}>
+    <div style={{ flex:1, height:1, background:"var(--sand-200)" }}/>
+    <span style={{ fontFamily:"'Lato', sans-serif", fontSize:11, color:"var(--ink-3)", letterSpacing:".08em", whiteSpace:"nowrap" }}>what others have shared</span>
+    <div style={{ flex:1, height:1, background:"var(--sand-200)" }}/>
+  </div>
+)}
 
       {/* ── CARDS — real user cards only, flat grid ── */}
-      {!isEmpty && (
+      {supaCards.length > 0 && (
         <div className="masonry-grid" style={{ alignItems:"start", gridAutoRows:"auto" }}>
           {allCards.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
