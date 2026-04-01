@@ -813,7 +813,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
 
       {/* ── CARDS — real user cards only, flat grid ── */}
       {!isEmpty && (
-        <div className="masonry-grid" style={{ alignItems:"start" gridAutoRows:"auto" }}>
+        <div className="masonry-grid" style={{ alignItems:"start", gridAutoRows:"auto" }}>
           {allCards.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
