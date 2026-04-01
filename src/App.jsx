@@ -751,7 +751,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
       }
     })
     .catch(() => {});
-  }, [hasEverSent]);
+  }, []);
 
   const allCards = supaCards;
   const isEmpty = !hasEverSent;
