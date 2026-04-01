@@ -735,7 +735,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
   const [supaCards, setSupaCards] = useState([]);
 
   useEffect(() => {
-    fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=99&_t=${Date.now()}`, {
+    fetch(`${SUPA_URL}/rest/v1/cards?select=id,cat,message,created_at&order=created_at.desc&limit=99`, {
       headers: supa.headers
     })
     .then(r => r.json())
