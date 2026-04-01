@@ -771,7 +771,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
         </p>
       </div>
 
-      <div style={{ textAlign:"center", marginBottom:32 }}>
+      {!hasEverSent && <div style={{ textAlign:"center", marginBottom:32 }}>
   <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginBottom:20 }}>
     {[
       { icon:"🙏", text:"Thank someone" },
@@ -790,7 +790,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
     Send a card
     <span style={{ display:"inline-block", animation:"arrowPulse 1.4s ease-in-out infinite" }}>→</span>
   </button>
-</div>
+</div>}
 
 {supaCards.length > 0 && (
   <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:28 }}>
