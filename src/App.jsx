@@ -747,6 +747,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
           message: c.message,
           color: CATS.find(x => x.id === c.cat)?.light || "#f7f1e8",
           accent: CATS.find(x => x.id === c.cat)?.accent || "#888",
+          created_at: c.created_at,
         })));
       }
     })
@@ -775,7 +776,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
     {[
       { icon:"🙏", text:"Thank someone" },
       { icon:"❤️", text:"Say you care" },
-      { icon:"✦",  text:"Celebrate them" },
+      { icon:"🥳",  text:"Celebrate them" },
     ].map(({ icon, text }) => (
       <div key={text} style={{ display:"flex", alignItems:"center", gap:5, padding:"6px 14px", borderRadius:999, border:"1.5px solid var(--sand-200)", background:"rgba(255,255,255,.7)", fontFamily:"'Lato', sans-serif", fontSize:12, color:"var(--ink-3)" }}>
         <span style={{ fontSize:12 }}>{icon}</span> {text}
