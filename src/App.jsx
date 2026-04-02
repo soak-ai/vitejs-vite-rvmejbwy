@@ -816,7 +816,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
                   position:"relative", cursor:"default", userSelect:"none" }}>
                 {isNew && (
                   <div style={{ marginBottom:8 }}>
-                    <span style={{ fontSize:10, background:cat?.accent||"#888", color:"#fff", borderRadius:999, padding:"2px 10px", fontFamily:"'Lato', sans-serif", fontWeight:500, letterSpacing:".04em", display:"flex" }}>just now</span>
+                    <span style={{ fontSize:10, background:cat?.accent||"#888", color:"#fff", borderRadius:999, padding:"2px 10px", fontFamily:"'Lato', sans-serif", fontWeight:500, letterSpacing:".04em", display:"inline-block" }}>just now</span>
                   </div>
                 )}
                 <div style={{ fontSize:11, letterSpacing:".12em", textTransform:"uppercase", color:cat?.accent, marginBottom:12, fontFamily:"'Lato', sans-serif" }}>
