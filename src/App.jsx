@@ -806,7 +806,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
           {allCards.slice(0, 99).map((item, i) => {
             const cat = getCat(item.cat);
             const mod = i % 6;
-          const isNew = item.isNew || (item.created_at && (Date.now() - new Date(item.created_at).getTime()) < 10*60*1000);
+          const isNew = item.isNew || (item.created_at && (Date.now() - new Date(item.created_at + 'Z').getTime()) < 10*60*1000);
             return (
               <div key={item.id} className={`masonry-item sticky-${mod} sticky-note`}
                 style={{ background:item.color, borderRadius:16, padding:24,
