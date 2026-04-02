@@ -792,7 +792,7 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
   </button>
 </div>}
 
-{supaCards.length > 0 && (
+{!hasEverSent && supaCards.length > 0 && (
   <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:28 }}>
     <div style={{ flex:1, height:1, background:"var(--sand-200)" }}/>
     <span style={{ fontFamily:"'Lato', sans-serif", fontSize:11, color:"var(--ink-3)", letterSpacing:".08em", whiteSpace:"nowrap" }}>what others have shared</span>
