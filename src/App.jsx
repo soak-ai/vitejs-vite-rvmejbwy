@@ -458,7 +458,7 @@ function FloatingBg() {
   return (
     <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:0, overflow:"hidden" }}>
       {["♡","✦","◇","·","✧","♡","◦","✦","·","♡"].map((g,i) => (
-        <div key={i} style={{ position:"absolute", left:`${4+i*10}%`, top:`${5+(i*17%72)}%`, fontSize:12+(i%4)*7, color:"rgba(24,18,14,.042)", animation:`floatY ${4.5+i*.55}s ease-in-out infinite`, animationDelay:`${i*.6}s` }}>{g}</div>
+        <div key={i} style={{ position:"absolute", left:`${4+i*10}%`, top:`${5+(i*17%72)}%`, fontSize:12+(i%4)*7, color:"rgba(24,18,14,.018)", animation:`floatY ${4.5+i*.55}s ease-in-out infinite`, animationDelay:`${i*.6}s` }}>{g}</div>
       ))}
     </div>
   );
@@ -772,6 +772,9 @@ function GratitudeWall({ wallMessages, onHome, hasEverSent }) {
       </div>
 
       {!hasEverSent && <div style={{ textAlign:"center", marginBottom:32 }}>
+        <div style={{ fontSize:52, marginBottom:16, lineHeight:1 }}>💌</div>
+        <h2 style={{ fontFamily:"'Lora',serif", fontStyle:"italic", fontSize:24, color:"var(--ink)", marginBottom:8 }}>Be the first to bond.</h2>
+        <p style={{ fontSize:14, color:"var(--ink-3)", marginBottom:24, lineHeight:1.6 }}>Say the thing you've been holding back.</p>
   <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginBottom:20 }}>
     {[
       { icon:"🙏", text:"Thank someone" },
